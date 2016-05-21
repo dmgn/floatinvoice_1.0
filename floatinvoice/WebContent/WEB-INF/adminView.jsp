@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="buyerfloatInvoiceListApp">
+<html ng-app="adminfloatInvoiceListApp">
 <head>
   <title>Float Invoice - Accelerate Cashflow</title>
   <meta charset="utf-8">
@@ -29,15 +29,15 @@
   <script src="js/angularModalService.js"></script>
   <script src="js/dirPagination.js"></script>
   <script src="js/angular-route.min.js"></script>
-  
+  <script src="js/appAdminView.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-route-segment/1.4.0/angular-route-segment.min.js"></script>
   <script>
-    buyerfloatInvoiceListApp.service('AdminAcroNameService', function(){
+    adminfloatInvoiceListApp.service('AdminAcroNameService', function(){
       this.getAcronym = function(){
         return "${acronym}";
       };
     });
-    buyerfloatInvoiceListApp.controller('AdminTabsCtrl', ['$scope', '$location', 
+    adminfloatInvoiceListApp.controller('AdminTabsCtrl', ['$scope', '$location', 
       function ($scope, $location) {
       $scope.adtabs = [         
           { link : '#/adHome', label : 'Home' },
@@ -77,7 +77,7 @@
       </div>
       <div class="col-sm-7">
         <ul class="nav nav-tabs nav-pills nav-justified" ng-controller="AdminTabsCtrl">
-          <li ng-class="adtabClass(btab, 'justified')" ng-repeat="tab in adtabs" tab="adtab"><a href="{{adtab.link}}" ng-click="adsetSelectedTab(btab, 'justified')">{{adtab.label}}</a></li>
+          <li ng-class="adtabClass(btab, 'justified')" ng-repeat="adtab in adtabs" tab="adtab"><a href="{{adtab.link}}" ng-click="adsetSelectedTab(adtab, 'justified')">{{adtab.label}}</a></li>
         </ul>              
       </div>
       <div class="col-sm-2 well well-sm">
