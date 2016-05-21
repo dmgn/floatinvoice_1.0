@@ -6,8 +6,8 @@
     adminfloatInvoiceListApp.config(
       function($locationProvider, $routeProvider, $routeSegmentProvider){
       $routeSegmentProvider.
-        when('/buyerAlleged','a0').    
-        when('/buyerRejected','a1');
+        when('/adHome','a0').    
+        when('/adDashBoard','a1');
 
       $routeSegmentProvider
       .segment('a0', {
