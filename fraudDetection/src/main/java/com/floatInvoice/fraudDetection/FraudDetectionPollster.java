@@ -26,7 +26,7 @@ public class FraudDetectionPollster {
 	@Scheduled(fixedRate=5000)
 	public void processTask( ){
 		List<DispatcherKey> list = dispatcher.execute();
-		ExecutorService executor = Executors.newFixedThreadPool(1);
+		ExecutorService executor = Executors.newFixedThreadPool(5);
 		for (DispatcherKey entry : list){
 			System.out.println("Current entry" + entry);
 			if(assignmentQueue.contains(entry)){

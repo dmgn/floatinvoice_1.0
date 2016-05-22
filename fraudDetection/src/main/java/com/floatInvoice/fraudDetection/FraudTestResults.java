@@ -3,10 +3,15 @@ package com.floatInvoice.fraudDetection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.FraudInvoiceDtls;
 
-public class FraudTestResults {
+public class FraudTestResults extends BaseMsg{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private FraudInvoiceDtls invoiceDtls;
 	private List<Integer> fraudTestIds;
 	

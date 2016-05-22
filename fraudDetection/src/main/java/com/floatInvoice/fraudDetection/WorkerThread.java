@@ -8,13 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.floatinvoice.messages.FraudInvoiceDtls;
 
+@Repository
 public class WorkerThread implements Callable<Integer> {
 
 	DispatcherKey taskKey;
@@ -39,9 +44,7 @@ public class WorkerThread implements Callable<Integer> {
 			list = fetchWorkAssignments();
 			FraudDetection fDetection = new FraudDetection();
 			List<FraudTestResults> resultList = fDetection.doFraudTests(list);
-			if(resultList != null && resultList.size() > 0)
-				persistFraudTestResults(resultList);
-			dequeueProcessedInvoices(list);
+			persistAndMarkAsComplete(list, resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -52,10 +55,18 @@ public class WorkerThread implements Callable<Integer> {
 		return list == null? 0 : list.size();
 	}
 
+	@Transactional
+	protected void persistAndMarkAsComplete(List<FraudInvoiceDtls> list,
+			List<FraudTestResults> resultList) {
+		if(resultList != null && resultList.size() > 0)
+			persistFraudTestResults(resultList);
+		dequeueProcessedInvoices(list);
+	}
+
 	private List<FraudInvoiceDtls> fetchWorkAssignments() {
 		int buyerId = taskKey.getBuyerId();
 		int supplierId = taskKey.getSupplierId();
-		final String sql = " SELECT II.INVOICE_START_DT, II.INVOICE_END_DT, II.AMOUNT, II.INVOICE_NO, "
+		final String sql = " SELECT II.INVOICE_START_DT, II.INVOICE_END_DT, II.AMOUNT, II.INVOICE_NO, II.INVOICE_ID, "
 				+ " II.PURCHASE_ORDER_NO, II.REF_ID, II.INSERT_DT, II.USER_ID, II.DESCRIPTION, FDQ.RANK, FDQ.BUYER_ID, FDQ.SUPPLIER_ID "
 				+ " FROM INVOICE_INFO II "
 				+ "JOIN FRAUD_DETECTION_QUEUE FDQ "
@@ -85,7 +96,7 @@ public class WorkerThread implements Callable<Integer> {
 	private int persistFraudTestResults(final List<FraudTestResults> fraudTestResultList){
 		int rowCount = 0;
 		for( FraudTestResults tmp: fraudTestResultList){
-			final String sql = "INSERT INTO FRAUD_INVOICES FI "
+			final String sql = "INSERT INTO FRAUD_INVOICES "
 					+ "(FRAUD_INVOICE_ID, FRAUD_INVOICE_NO, BUYER_ID, SUPPLIER_ID, INSERT_DT, UPDATE_DT, FRAUD_INVOICE_REF_ID) "
 					+ " VALUES (:fraudInvoiceId, :fraudInvoiceNo, :buyerId, :supplierId, :insertDt, :updateDt, :invoiceRefId)";
 			MapSqlParameterSource paramMap = new MapSqlParameterSource();
@@ -97,8 +108,14 @@ public class WorkerThread implements Callable<Integer> {
 			paramMap.addValue("updateDt", new Timestamp(System.currentTimeMillis()));
 			paramMap.addValue("invoiceRefId", tmp.getInvoiceDtls().getRefId());
 			rowCount = jdbcTemplate.update(sql, paramMap);
+			System.out.println(" rowCount ======>>> " + rowCount);
+			final String fraudIdSql = " SELECT ID FROM FRAUD_INVOICES WHERE FRAUD_INVOICE_ID = :fraudInvoiceId";		
+			MapSqlParameterSource paramFraudIdMap = new MapSqlParameterSource();
+			paramFraudIdMap.addValue("fraudInvoiceId", tmp.getInvoiceDtls().getInvoiceId());
+			final int idValue = jdbcTemplate.queryForObject(fraudIdSql, paramFraudIdMap, Integer.class);
+			System.out.println(" Idvalue ======>>> " + idValue);
 			final List<Integer> lst = tmp.getFraudTestIds();
-			final String fraudTestDtlsSql = "INSERT INTO FRAUD_INVOICE_TEST_DTLS (FRAUD_TEST_ID) VALUES (?)  ";
+			final String fraudTestDtlsSql = "INSERT INTO FRAUD_INVOICE_TEST_DTLS (FRAUD_ID, FRAUD_TEST_ID) VALUES (?, ?)  ";
 			jdbcTemplate.getJdbcOperations().batchUpdate(fraudTestDtlsSql, new BatchPreparedStatementSetter() {
 				@Override
 				public int getBatchSize() {
@@ -107,7 +124,8 @@ public class WorkerThread implements Callable<Integer> {
 				@Override
 				public void setValues(PreparedStatement ps, int idx)
 						throws SQLException {
-					ps.setInt(1, lst.get(idx));
+					ps.setInt(1, idValue);
+					ps.setInt(2, lst.get(idx));
 				}
 			});
 		}
@@ -119,6 +137,7 @@ public class WorkerThread implements Callable<Integer> {
 		public FraudInvoiceDtls mapRow(ResultSet rs, int arg1)
 				throws SQLException {
 			FraudInvoiceDtls result = new FraudInvoiceDtls();
+			result.setInvoiceId(rs.getInt("INVOICE_ID"));
 			result.setStartDt(rs.getDate("INVOICE_START_DT"));
 			result.setEndDt(rs.getDate("INVOICE_END_DT"));
 			result.setAmount(rs.getDouble("AMOUNT"));
