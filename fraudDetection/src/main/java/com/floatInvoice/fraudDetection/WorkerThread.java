@@ -82,14 +82,19 @@ public class WorkerThread implements Callable<Integer> {
 
 	private int dequeueProcessedInvoices( final List<FraudInvoiceDtls> list ){
 		List<Integer> ids = new ArrayList<>();
+		List<Integer> invoiceIds = new ArrayList<>();
 		for(FraudInvoiceDtls fiDtls : list){
 			ids.add(fiDtls.getFraudId());
+			invoiceIds.add(fiDtls.getInvoiceId());
 		}
 		final String sql = "UPDATE FRAUD_DETECTION_QUEUE FDQ SET FDQ.STATUS = 1 WHERE FDQ.RANK IN (:IDS)";
 		MapSqlParameterSource paramMap = new MapSqlParameterSource();
 		paramMap.addValue("IDS", ids);
 		int rowCount = jdbcTemplate.update(sql, paramMap);
 		System.out.println(String.format("Dequeued records %d", rowCount));
+		
+		//final String updateSql = "UPDATE FRAUD_DETECTION_QUEUE FDQ SET FDQ.STATUS = 1 WHERE FDQ.RANK IN (:IDS)"
+		
 		return rowCount;
 	}
 	

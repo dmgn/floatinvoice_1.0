@@ -56,7 +56,8 @@ public class InvoiceControllerTest {
 	
 	@Test
 	public void testViewInvoices() throws Exception{
-		RequestBuilder req = get("/invoice/view?acro=COTIND").contentType(MediaType.APPLICATION_JSON);
+		RequestBuilder req = get("/invoice/view?acro=COTIND").contentType(MediaType.APPLICATION_JSON)
+				.header("remote-user", "abc.xyz@gmail.com");
 		MvcResult res = mockMvc.perform(req).andDo(print()).andReturn();	
 	}
 	

@@ -189,8 +189,6 @@ public class FraudDetection {
 
 	private static final String masterAddress="spark://localhost:7077";
 
-	private final String jarPath="D:\\Project_FloatInvoice\\jar\\FraudDetection.jar";
-
 	private static SparkConf conf;
 
 	private static JavaSparkContext context;	
@@ -202,10 +200,6 @@ public class FraudDetection {
 	}
 	
 	public FraudDetection() {
-
-
-		
-		//context.addJar(jarPath);
 
 	}
 
@@ -242,12 +236,13 @@ public class FraudDetection {
 				int days=(int) ((paidDt.getTime() - startDt.getTime()) / (1000 * 60 * 60 * 24));
 				if(days > 30)
 					fraudTestIds.add(FraudDetectionTestNameEnums.LatePayments.getCode());
+				if( paidDtCal != null && 
+						   (paidDtCal.get(Calendar.DAY_OF_WEEK)== 7 || 
+							paidDtCal.get(Calendar.DAY_OF_WEEK)== 1) ){
+						fraudTestIds.add(FraudDetectionTestNameEnums.WeekendPayments.getCode());
+				}
 			}
-			if( paidDtCal != null && 
-				   (paidDtCal.get(Calendar.DAY_OF_WEEK)== 7 || 
-					paidDtCal.get(Calendar.DAY_OF_WEEK)== 1) ){
-				fraudTestIds.add(FraudDetectionTestNameEnums.WeekendPayments.getCode());
-			}
+			
 			return results;
 		}
 	};

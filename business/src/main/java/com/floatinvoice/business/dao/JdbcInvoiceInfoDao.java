@@ -68,10 +68,22 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 	
 	@Override
 	public ListMsg<InvoiceDtlsMsg> fetchAllNewInvoices(String smeAcronym) {
-		final String sql = " SELECT * FROM INVOICE_INFO II, ORGANIZATION_INFO ORG WHERE "
+		
+		final String sql = "SELECT II.AMOUNT, II.DESCRIPTION, II.BUYER_NAME, II.INVOICE_START_DT, II.INVOICE_END_DT, "
+				+ " II.PURCHASE_ORDER_NO, II.INVOICE_NO, II.REF_ID, ORG.ACRONYM, FI.ID AS FRAUD_ID "
+				+ " FROM INVOICE_INFO II JOIN ORGANIZATION_INFO ORG "
+				+ " ON II.COMPANY_ID = ORG.COMPANY_ID AND ORG.ACRONYM = :smeAcronym "
+				+ " AND II.IS_ELIGIBLE=0 "
+				+ " AND II.INVOICE_ID NOT IN (SELECT INC.INVOICE_ID FROM INVOICE_POOL_CANDIDATE INC ) "
+				+ " JOIN FRAUD_DETECTION_QUEUE FDQ "
+				+ " ON FDQ.FRAUD_INVOICE_ID = II.INVOICE_ID AND FDQ.STATUS =1 "
+				+ " LEFT JOIN FRAUD_INVOICES FI "
+				+ " ON FI.FRAUD_INVOICE_ID = II.INVOICE_ID";
+		
+		/*final String sql = " SELECT * FROM INVOICE_INFO II, ORGANIZATION_INFO ORG WHERE "
 				+ "II.COMPANY_ID = ORG.COMPANY_ID AND ORG.ACRONYM = :smeAcronym "
 				+ " AND II.IS_ELIGIBLE=0 "
-				+ " AND II.INVOICE_ID NOT IN (SELECT INC.INVOICE_ID FROM INVOICE_POOL_CANDIDATE INC )";
+				+ " AND II.INVOICE_ID NOT IN (SELECT INC.INVOICE_ID FROM INVOICE_POOL_CANDIDATE INC )";*/
 		MapSqlParameterSource map = new MapSqlParameterSource();
 		map.addValue("smeAcronym", smeAcronym);
 		List<InvoiceDtlsMsg> list = jdbcTemplate.query(sql, map, new InvoiceInfoRowMapper());
@@ -1053,12 +1065,15 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 		final String sql = " SELECT II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
 				+ " II.INVOICE_START_DT, II.INVOICE_END_DT, SME.ACRONYM, II.INVOICE_NO, II.REF_ID, II.PURCHASE_ORDER_NO "
 				+ " FROM INVOICE_INFO II "
+				+ " JOIN FRAUD_DETECTION_QUEUE FDQ "
+				+ " ON FDQ.FRAUD_INVOICE_ID = II.INVOICE_ID AND FDQ.STATUS =1 "
 				+ "JOIN ORGANIZATION_INFO BUYERORG "
 				+ "ON II.BUYER_ID = BUYERORG.COMPANY_ID "
 				+ "JOIN  ORGANIZATION_INFO SME "
 				+ "ON II.COMPANY_ID = SME.COMPANY_ID "
 				+ "AND BUYERORG.COMPANY_ID = :buyerOrgId "
 				+ "AND II.IS_ELIGIBLE = 2 " // Value 2 implies Pending Approval 
+				+ "AND NOT EXISTS (SELECT 1 FROM FRAUD_INVOICES FI WHERE FI.FRAUD_INVOICE_ID = II.INVOICE_ID ) "
 				+ "ORDER BY II.COMPANY_ID "; 
 		MapSqlParameterSource map = new MapSqlParameterSource();
 		map.addValue("buyerOrgId", buyerOrgId);
