@@ -6,8 +6,8 @@
           { link : '#/s1/unpaid', label : 'Unpaid' },
           { link : '#/s1/pending', label : 'Pending' },
           { link : '#/s1/funded', label : 'Bids' },
-          { link : '#/s1/paid', label : 'Paid' },
-          { link : '#/s1/delinquent', label : 'Delinquent' }
+          { link : '#/s1/paid', label : 'Paid' }/*,
+          { link : '#/s1/delinquent', label : 'Delinquent' }*/
         ];
       var index = -1;
       var tabList =  $scope.tabs;

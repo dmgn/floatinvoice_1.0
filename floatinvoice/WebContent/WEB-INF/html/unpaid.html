@@ -40,7 +40,7 @@
       <td>{{item.invoiceNo}}</td>
       <td>{{item.startDt}}</td>
       <td>{{item.endDt}}</td>
-      <td >
+      <td ng-if="item.fraudTx == false">
       <button type="button" class="btn btn-primary" ng-click=collectNow(item.refId)>Collect Now</button>
       </td>
     </tr>

@@ -76,6 +76,9 @@ public class InvoiceDtlsMsg extends BaseMsg{
 	
 	@XmlElement(name="isBuyerApproved")
 	private boolean isBuyerApproved;
+
+	@XmlElement(name="isFraudTx")
+	private boolean isFraudTx;
 	
 	public double getInterestRate() {
 		return interestRate;
@@ -236,4 +239,14 @@ public class InvoiceDtlsMsg extends BaseMsg{
 	public void setPaidDt(Date paidDt) {
 		this.paidDt = paidDt;
 	}
+
+	public boolean isFraudTx() {
+		return isFraudTx;
+	}
+
+	public void setFraudTx(boolean isFraudTx) {
+		this.isFraudTx = isFraudTx;
+	}
+	
+	
 }

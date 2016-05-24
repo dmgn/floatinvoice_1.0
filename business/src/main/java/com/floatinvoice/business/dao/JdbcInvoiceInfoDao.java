@@ -110,6 +110,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 			result.setInvoiceNo(rs.getString("invoice_no"));
 			result.setRefId( rs.getString("ref_id"));
 			result.setInvoicePONo( rs.getString("purchase_order_no"));
+			result.setFraudTx(rs.getInt("fraud_id") == 0 ? false : true);
 			return result;
 		}
 
@@ -866,7 +867,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 	public ListMsg<InvoiceDtlsMsg> fetchInvoicePoolDtls(int orgId,
 			String poolRefId) {
 		
-		final String sql = " SELECT II.PURCHASE_ORDER_NO, II.REF_ID, II.DESCRIPTION, II.INVOICE_START_DT, II.INVOICE_END_DT, II.AMOUNT, II.BUYER_NAME, II.INVOICE_NO, SME.ACRONYM FROM INVOICE_POOL IP "
+		final String sql = " SELECT 0 AS FRAUD_ID, II.PURCHASE_ORDER_NO, II.REF_ID, II.DESCRIPTION, II.INVOICE_START_DT, II.INVOICE_END_DT, II.AMOUNT, II.BUYER_NAME, II.INVOICE_NO, SME.ACRONYM FROM INVOICE_POOL IP "
 				+ " JOIN INVOICE_POOL_MEMBERS IPM "
 				+ " ON IP.POOL_ID = IPM.INVOICE_POOL_ID "
 				+ " JOIN INVOICE_INFO II "
@@ -1062,7 +1063,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 	public ListMsg<InvoiceDtlsMsg> fetchPendingInvoicesForApproval(
 			int buyerOrgId) {
 		
-		final String sql = " SELECT II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
+		final String sql = " SELECT 0 AS FRAUD_ID, II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
 				+ " II.INVOICE_START_DT, II.INVOICE_END_DT, SME.ACRONYM, II.INVOICE_NO, II.REF_ID, II.PURCHASE_ORDER_NO "
 				+ " FROM INVOICE_INFO II "
 				+ " JOIN FRAUD_DETECTION_QUEUE FDQ "
@@ -1094,7 +1095,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 
 	@Override
 	public ListMsg<InvoiceDtlsMsg> viewBuyerApprovedInvoices(int buyerOrgId) {
-		final String sql = " SELECT II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
+		final String sql = " SELECT 0 AS FRAUD_ID, II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
 				+ " II.INVOICE_START_DT, II.INVOICE_END_DT, SME.ACRONYM, II.INVOICE_NO, II.REF_ID, II.PURCHASE_ORDER_NO "
 				+ " FROM INVOICE_INFO II "
 				+ "JOIN ORGANIZATION_INFO BUYERORG "
@@ -1113,7 +1114,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 
 	@Override
 	public ListMsg<InvoiceDtlsMsg> viewBuyerRejectedInvoices(int buyerOrgId) {
-		final String sql = " SELECT II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
+		final String sql = " SELECT 0 AS FRAUD_ID, II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
 				+ " II.INVOICE_START_DT, II.INVOICE_END_DT, SME.ACRONYM, II.INVOICE_NO, II.REF_ID, II.PURCHASE_ORDER_NO "
 				+ " FROM INVOICE_INFO II "
 				+ "JOIN ORGANIZATION_INFO BUYERORG "
@@ -1131,7 +1132,7 @@ public class JdbcInvoiceInfoDao implements InvoiceInfoDao {
 
 	@Override
 	public ListMsg<InvoiceDtlsMsg> viewBuyerAllegedInvoices(int buyerOrgId) {
-		final String sql = " SELECT II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
+		final String sql = " SELECT 0 AS FRAUD_ID,, II.AMOUNT, II.DESCRIPTION, BUYERORG.ACRONYM AS buyer_name, "
 				+ " II.INVOICE_START_DT, II.INVOICE_END_DT, SME.ACRONYM, II.INVOICE_NO, II.REF_ID, II.PURCHASE_ORDER_NO "
 				+ " FROM INVOICE_INFO II "
 				+ "JOIN ORGANIZATION_INFO BUYERORG "

@@ -58,8 +58,10 @@ public class WorkerThread implements Callable<Integer> {
 	@Transactional
 	protected void persistAndMarkAsComplete(List<FraudInvoiceDtls> list,
 			List<FraudTestResults> resultList) {
-		if(resultList != null && resultList.size() > 0)
+		if(resultList != null && resultList.size() > 0){
+			
 			persistFraudTestResults(resultList);
+		}
 		dequeueProcessedInvoices(list);
 	}
 
@@ -101,38 +103,40 @@ public class WorkerThread implements Callable<Integer> {
 	private int persistFraudTestResults(final List<FraudTestResults> fraudTestResultList){
 		int rowCount = 0;
 		for( FraudTestResults tmp: fraudTestResultList){
-			final String sql = "INSERT INTO FRAUD_INVOICES "
-					+ "(FRAUD_INVOICE_ID, FRAUD_INVOICE_NO, BUYER_ID, SUPPLIER_ID, INSERT_DT, UPDATE_DT, FRAUD_INVOICE_REF_ID) "
-					+ " VALUES (:fraudInvoiceId, :fraudInvoiceNo, :buyerId, :supplierId, :insertDt, :updateDt, :invoiceRefId)";
-			MapSqlParameterSource paramMap = new MapSqlParameterSource();
-			paramMap.addValue("fraudInvoiceId", tmp.getInvoiceDtls().getInvoiceId());
-			paramMap.addValue("fraudInvoiceNo", tmp.getInvoiceDtls().getInvoiceNo());
-			paramMap.addValue("buyerId", tmp.getInvoiceDtls().getBuyerId());
-			paramMap.addValue("supplierId", tmp.getInvoiceDtls().getSupplierId());
-			paramMap.addValue("insertDt", new Timestamp(System.currentTimeMillis()));
-			paramMap.addValue("updateDt", new Timestamp(System.currentTimeMillis()));
-			paramMap.addValue("invoiceRefId", tmp.getInvoiceDtls().getRefId());
-			rowCount = jdbcTemplate.update(sql, paramMap);
-			System.out.println(" rowCount ======>>> " + rowCount);
-			final String fraudIdSql = " SELECT ID FROM FRAUD_INVOICES WHERE FRAUD_INVOICE_ID = :fraudInvoiceId";		
-			MapSqlParameterSource paramFraudIdMap = new MapSqlParameterSource();
-			paramFraudIdMap.addValue("fraudInvoiceId", tmp.getInvoiceDtls().getInvoiceId());
-			final int idValue = jdbcTemplate.queryForObject(fraudIdSql, paramFraudIdMap, Integer.class);
-			System.out.println(" Idvalue ======>>> " + idValue);
-			final List<Integer> lst = tmp.getFraudTestIds();
-			final String fraudTestDtlsSql = "INSERT INTO FRAUD_INVOICE_TEST_DTLS (FRAUD_ID, FRAUD_TEST_ID) VALUES (?, ?)  ";
-			jdbcTemplate.getJdbcOperations().batchUpdate(fraudTestDtlsSql, new BatchPreparedStatementSetter() {
-				@Override
-				public int getBatchSize() {
-					return lst.size();
-				}
-				@Override
-				public void setValues(PreparedStatement ps, int idx)
-						throws SQLException {
-					ps.setInt(1, idValue);
-					ps.setInt(2, lst.get(idx));
-				}
-			});
+			if(tmp.getFraudTestIds() != null && tmp.getFraudTestIds().size() > 0){
+				final String sql = "INSERT INTO FRAUD_INVOICES "
+						+ "(FRAUD_INVOICE_ID, FRAUD_INVOICE_NO, BUYER_ID, SUPPLIER_ID, INSERT_DT, UPDATE_DT, FRAUD_INVOICE_REF_ID) "
+						+ " VALUES (:fraudInvoiceId, :fraudInvoiceNo, :buyerId, :supplierId, :insertDt, :updateDt, :invoiceRefId)";
+				MapSqlParameterSource paramMap = new MapSqlParameterSource();
+				paramMap.addValue("fraudInvoiceId", tmp.getInvoiceDtls().getInvoiceId());
+				paramMap.addValue("fraudInvoiceNo", tmp.getInvoiceDtls().getInvoiceNo());
+				paramMap.addValue("buyerId", tmp.getInvoiceDtls().getBuyerId());
+				paramMap.addValue("supplierId", tmp.getInvoiceDtls().getSupplierId());
+				paramMap.addValue("insertDt", new Timestamp(System.currentTimeMillis()));
+				paramMap.addValue("updateDt", new Timestamp(System.currentTimeMillis()));
+				paramMap.addValue("invoiceRefId", tmp.getInvoiceDtls().getRefId());
+				rowCount = jdbcTemplate.update(sql, paramMap);
+				System.out.println(" rowCount ======>>> " + rowCount);
+				final String fraudIdSql = " SELECT ID FROM FRAUD_INVOICES WHERE FRAUD_INVOICE_ID = :fraudInvoiceId";		
+				MapSqlParameterSource paramFraudIdMap = new MapSqlParameterSource();
+				paramFraudIdMap.addValue("fraudInvoiceId", tmp.getInvoiceDtls().getInvoiceId());
+				final int idValue = jdbcTemplate.queryForObject(fraudIdSql, paramFraudIdMap, Integer.class);
+				System.out.println(" Idvalue ======>>> " + idValue);
+				final List<Integer> lst = tmp.getFraudTestIds();
+				final String fraudTestDtlsSql = "INSERT INTO FRAUD_INVOICE_TEST_DTLS (FRAUD_ID, FRAUD_TEST_ID) VALUES (?, ?)  ";
+				jdbcTemplate.getJdbcOperations().batchUpdate(fraudTestDtlsSql, new BatchPreparedStatementSetter() {
+					@Override
+					public int getBatchSize() {
+						return lst.size();
+					}
+					@Override
+					public void setValues(PreparedStatement ps, int idx)
+							throws SQLException {
+						ps.setInt(1, idValue);
+						ps.setInt(2, lst.get(idx));
+					}
+				});
+			}
 		}
 		return rowCount;
 	}
