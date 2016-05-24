@@ -4,8 +4,9 @@
   <title>Float Invoice - Accelerate Cashflow</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-       <link rel="stylesheet" href="css/angular-material.min.css">
-
+  <link rel="stylesheet" href="css/angular-material.min.css">
+  <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common.min.css" />
+  <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.default.min.css" />
 <!--     <link rel="stylesheet" href="css/bootstrap.min.css" />
  -->
  <style>
@@ -48,9 +49,11 @@
   <script src="js/delinquent.js"></script>
   <script src="js/homePage.js"></script>
   <script src="js/profile.js"></script>
+  <script src="js/uploadNew.js"></script>
   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" />
   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.min.css" />
   <script src="//kendo.cdn.telerik.com/2016.1.412/js/kendo.all.min.js"></script>
+    
   <script>
     floatInvoiceListApp.service('fiService', function(){
       this.getAcronym = function(){

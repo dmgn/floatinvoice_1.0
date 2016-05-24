@@ -1,6 +1,6 @@
 var floatInvoiceListApp = angular.module('floatInvoiceListApp',
   ['angularUtils.directives.dirPagination','ngRoute', 'route-segment', 'view-segment', 'angularModalService',
-  'ngMaterial', 'ngMessages']);
+  'ngMaterial', 'ngMessages','kendo.directives']);
 floatInvoiceListApp.config(function ($locationProvider, $routeProvider, $routeSegmentProvider) {
     $routeSegmentProvider.
     when('/homePg','s1').
@@ -42,19 +42,19 @@ floatInvoiceListApp.config(function ($locationProvider, $routeProvider, $routeSe
         controller: 'ProfileTabsCtrl'
     });
 
-/*    $routeSegmentProvider
-      .within('s2')
-      .segment('upload', {
-        templateUrl:'/floatinvoice/html/upload.html',
-        controller:'UploadCtrl'
-    });*/
-
-
-    $routeSegmentProvider
+/*   $routeSegmentProvider
       .within('s1')
       .segment('upload', {
         templateUrl:'/floatinvoice/html/upload.html',
-        controller:'fileUploadController'
+        controller:'UploadCtrl'
+    });
+*/
+
+   $routeSegmentProvider
+      .within('s1')
+      .segment('upload', {
+        templateUrl:'/floatinvoice/html/uploadNew.html',
+        controller:'NewUploadController'
     });
 
     $routeSegmentProvider
