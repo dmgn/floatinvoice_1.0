@@ -1,33 +1,52 @@
 package com.floatinvoice.business.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 import javax.sql.DataSource;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.lob.LobCreator;
+import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.floatinvoice.common.RegistrationStatusEnum;
+import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.ListMsg;
 import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep3UserPersonalDtlsMsg;
+import com.floatinvoice.messages.SupportDocDtls;
+import com.floatinvoice.messages.UploadMessage;
 
 @Transactional
 public class JdbcRegistrationDao implements RegistrationDao {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
-
+	private LobHandler lobHandler;
+	private OrgReadDao orgReadDao;
+	final static String sql = "INSERT INTO DOCS_STORE (FILE_NAME, FILE_BYTES, INSERT_DT, COMPANY_ID, USER_ID, REF_ID, REQUEST_ID, SOURCE_APP, CATEGORY) "
+			+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
 	public JdbcRegistrationDao(){
 		
 	}
 	
-	public JdbcRegistrationDao( DataSource dataSource ){
-		jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+	public JdbcRegistrationDao( DataSource dataSource, LobHandler lobHandler, OrgReadDao orgReadDao ){
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		this.lobHandler = lobHandler;
+		this.orgReadDao = orgReadDao;
 	}
 	
 	private boolean updateRegistrationStatus(String userEmail, int statusCode){
@@ -125,7 +144,71 @@ public class JdbcRegistrationDao implements RegistrationDao {
 		
 	}
 
+	@Override
+	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
+		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getSmeAcronym());
+		final int orgId = (int) orgInfo.get("COMPANY_ID");
+		final int userId = orgReadDao.findUserId(msg.getSmeAcronym());		
+		final LobCreator lobCreator = lobHandler.getLobCreator();
+		final byte [] bytes = msg.getFile().getBytes();
+		jdbcTemplate.getJdbcOperations().update( new PreparedStatementCreator() {			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection conn)
+					throws SQLException {
+
+				final PreparedStatement ps = conn.prepareStatement(sql);
+				try {
+					ps.setString(1, msg.getFileName());
+					lobCreator.setBlobAsBytes(ps, 2, bytes);
+					ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+					ps.setInt(4, orgId);
+					ps.setInt(5, userId);			
+					ps.setString(6, UUIDGenerator.newRefId());
+					ps.setString(7, UUID.randomUUID().toString());
+					ps.setInt(8, 0);
+					ps.setString(9, msg.getCategory());
+				} catch (SQLException e) {
+					throw e;
+				}
+				return ps;
+			}
+		});
+		lobCreator.close();
+		BaseMsg response = new BaseMsg();	
+		response.addInfoMsg("File uploaded successfully", HttpStatus.OK.value());
+		return response;
+	}
+
+	@Override
+	public ListMsg<SupportDocDtls> summary(String acronym) {
+		
+		Map<String, Object> orgInfo = orgReadDao.findOrgId(acronym);
+		final int orgId = (int) orgInfo.get("COMPANY_ID");
+		final String sql = "SELECT FS.FILE_NAME, FS.REF_ID, FS.INSERT_DT, CLI.EMAIL FROM FILE_STORE FS"
+				+ " JOIN CLIENT_LOGIN_INFO CLI"
+				+ " ON CLI.USER_ID = FS.USER_ID"
+				+ " WHERE FS.COMPANY_ID = :orgId";
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("orgId", orgId);
+		List<SupportDocDtls> list = jdbcTemplate.query(sql, paramMap, new SupportDocRowMapper());
+		ListMsg<SupportDocDtls> result = new ListMsg<>(list);
+		return result;
+	}
+
 	
-	
+	private class SupportDocRowMapper implements RowMapper<SupportDocDtls>{
+
+		@Override
+		public SupportDocDtls mapRow(ResultSet rs, int arg1)
+				throws SQLException {
+			SupportDocDtls rec = new SupportDocDtls();
+			rec.setFileName(rs.getString("FILE_NAME"));
+			rec.setRefId(rs.getString("REF_ID"));
+			rec.setTimest(rs.getDate("INSERT_DT"));
+			rec.setUser(rs.getString("EMAIL"));
+			return rec;
+		}
+		
+	}
 }
 
