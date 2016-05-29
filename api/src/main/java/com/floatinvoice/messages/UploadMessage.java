@@ -23,6 +23,8 @@ public class UploadMessage extends BaseMsg{
 	private String fileName;
 	
 	private String smeAcronym;
+	
+	private String category;
 
 	public MultipartFile getFile() {
 		return file;
@@ -46,6 +48,14 @@ public class UploadMessage extends BaseMsg{
 
 	public void setSmeAcronym(String smeAcronym) {
 		this.smeAcronym = smeAcronym;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	
 	

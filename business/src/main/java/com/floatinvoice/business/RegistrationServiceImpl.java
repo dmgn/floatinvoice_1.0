@@ -5,9 +5,12 @@ import org.springframework.http.HttpStatus;
 import com.floatinvoice.business.dao.RegistrationDao;
 import com.floatinvoice.common.RegistrationStatusEnum;
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.ListMsg;
 import com.floatinvoice.messages.RegistrationStep1SignInDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep3UserPersonalDtlsMsg;
+import com.floatinvoice.messages.SupportDocDtls;
+import com.floatinvoice.messages.UploadMessage;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
@@ -45,6 +48,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 		BaseMsg baseMsg = registrationDao.registerUserBankInfo(msg);
 		baseMsg.addInfoMsg("Message saved successfully", HttpStatus.OK.value());
 		return baseMsg;
+	}
+
+	@Override
+	public BaseMsg uploadSupportDocs(UploadMessage msg) throws Exception {
+		BaseMsg baseMsg = registrationDao.fileUpload(msg);
+		return baseMsg;
+	}
+
+	@Override
+	public ListMsg<SupportDocDtls> summary(String acronym) {
+		return registrationDao.summary(acronym);
 	}
 
 }

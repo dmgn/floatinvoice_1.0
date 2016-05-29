@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 
 import com.floatinvoice.common.InvoiceCounterPartyObject;
 import com.floatinvoice.common.UUIDGenerator;
+import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.FileDetails;
 import com.floatinvoice.messages.UploadMessage;
@@ -193,7 +194,8 @@ public class JdbcInvoiceFileUploadDao implements InvoiceFileUploadDao {
 	@Override
 	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
 		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getSmeAcronym());
-		final int orgId = (int) orgInfo.get("COMPANY_ID");
+		final int orgId = (int) orgInfo.get("COMPANY_ID");		
+		final int userId = orgReadDao.findUserId(UserContext.getUserName());		
 		final LobCreator lobCreator = lobHandler.getLobCreator();
 		final byte [] bytes = msg.getFile().getBytes();
 		jdbcTemplate.getJdbcOperations().update( new PreparedStatementCreator() {			
@@ -207,7 +209,7 @@ public class JdbcInvoiceFileUploadDao implements InvoiceFileUploadDao {
 					lobCreator.setBlobAsBytes(ps, 2, bytes);
 					ps.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 					ps.setInt(4, orgId);
-					ps.setInt(5, 1);			
+					ps.setInt(5, userId);			
 					ps.setString(6, UUIDGenerator.newRefId());
 					ps.setString(7, UUID.randomUUID().toString());
 					ps.setInt(8, 0);
