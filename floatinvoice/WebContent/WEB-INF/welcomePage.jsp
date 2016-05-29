@@ -50,6 +50,8 @@
   <script src="js/homePage.js"></script>
   <script src="js/profile.js"></script>
   <script src="js/uploadNew.js"></script>
+  <script src="js/supportingDoc.js"></script>
+  <script src="js/appAdminView.js"></script>
   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" />
   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.min.css" />
   <script src="//kendo.cdn.telerik.com/2016.1.412/js/kendo.all.min.js"></script>

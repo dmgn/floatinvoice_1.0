@@ -5,8 +5,12 @@ import java.util.Map;
 
 public interface OrgReadDao {
 
-	public Map<String, Object> findOrgId( String acronym );
+	Map<String, Object> findOrgId( String acronym );
 
 	List<Integer> findAllFinancierOrgIds();
+	
+	Integer findUserId(String userEmail);
+	
+	Map<String, Object> findOrgAndUserId( String userEmail );
 	
 }

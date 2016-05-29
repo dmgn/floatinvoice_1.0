@@ -1,8 +1,11 @@
 package com.floatinvoice.business.dao;
 
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.ListMsg;
 import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep3UserPersonalDtlsMsg;
+import com.floatinvoice.messages.SupportDocDtls;
+import com.floatinvoice.messages.UploadMessage;
 
 public interface RegistrationDao {
 
@@ -11,4 +14,9 @@ public interface RegistrationDao {
 	BaseMsg registerOrgInfo(RegistrationStep2CorpDtlsMsg msg);
 
 	BaseMsg registerUserBankInfo (RegistrationStep3UserPersonalDtlsMsg msg);
+	
+	BaseMsg fileUpload(UploadMessage msg) throws Exception;
+	
+	ListMsg<SupportDocDtls> summary(String acronym);
+
 }

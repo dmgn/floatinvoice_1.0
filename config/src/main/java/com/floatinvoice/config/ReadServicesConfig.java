@@ -48,7 +48,7 @@ public class ReadServicesConfig {
 	
 	@Bean
 	public RegistrationDao registrationDao(){
-		return new JdbcRegistrationDao(dataSourceConfig.dataSource());
+		return new JdbcRegistrationDao(dataSourceConfig.dataSource(), dataSourceConfig.lobHandler(), orgReadDao() );
 	}
 	
 	@Bean
