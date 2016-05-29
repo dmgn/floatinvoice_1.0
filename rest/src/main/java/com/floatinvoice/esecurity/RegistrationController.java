@@ -9,14 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.floatinvoice.business.ProfileService;
 import com.floatinvoice.business.RegistrationService;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.ListMsg;
 import com.floatinvoice.messages.RegistrationStep1SignInDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep3UserPersonalDtlsMsg;
+import com.floatinvoice.messages.SupportDocDtls;
+import com.floatinvoice.messages.UploadMessage;
 
 @Controller
 @RequestMapping("/register")
@@ -50,6 +55,25 @@ public class RegistrationController {
        // ModelAndView model = new ModelAndView();
        // model.setViewName("homePage");
         return new ResponseEntity<>(registrationSvc.registerUserBankInfo(regStep3), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = { "/upload"}, method = RequestMethod.POST)
+    public  ResponseEntity<BaseMsg> uploadFile(@RequestParam(value="acro", required=true) String acro,
+    		@RequestParam(value="filename", required=false) String fileName,
+    		@RequestParam(value="category", required=true) String category,
+    		@RequestParam(value="file", required=true) MultipartFile file) throws Exception {    
+		UploadMessage uploadMsg = new UploadMessage(file);
+    	uploadMsg.setFileName(file.getOriginalFilename());
+    	uploadMsg.setSmeAcronym(acro);
+    	uploadMsg.setCategory(category);
+    	return new ResponseEntity<>(registrationSvc.uploadSupportDocs(uploadMsg), HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = { "/docs/summary"}, method = RequestMethod.GET)
+    public  ResponseEntity<ListMsg<SupportDocDtls>> summary(@RequestParam(value="acro", required=true) String acro) throws Exception {    
+		
+    	return new ResponseEntity<>(registrationSvc.summary(acro), HttpStatus.OK);
 	}
 	
 	 protected void initializeSession(String email, HttpSession session){	    	
