@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.FileDetails;
+import com.floatinvoice.messages.ListMsg;
 import com.floatinvoice.messages.UploadMessage;
 
 public interface InvoiceFileUploadDao {
@@ -19,4 +20,6 @@ public interface InvoiceFileUploadDao {
 	void uploadInvoiceRecords(Map<String, List<Object>> invoiceDtMap, int orgId, int fileId);
 	
 	int markFileProcessingAsComplete(FileDetails fileDetails);
+	
+	List<FileDetails> viewAllInvoiceFiles (int orgId);
 }

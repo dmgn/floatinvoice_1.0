@@ -1,6 +1,13 @@
 package com.floatinvoice.messages;
 
-public class FileDetails {
+import java.util.Date;
+
+public class FileDetails extends BaseMsg{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private int fileId;
 	
@@ -11,6 +18,10 @@ public class FileDetails {
 	private int userId;
 	
 	private int companyId;
+	
+	private Date insertDt;
+	
+	private String status;
 
 	public int getFileId() {
 		return fileId;
@@ -51,5 +62,22 @@ public class FileDetails {
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
 	}
+
+	public Date getInsertDt() {
+		return insertDt;
+	}
+
+	public void setInsertDt(Date insertDt) {
+		this.insertDt = insertDt;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	
 }

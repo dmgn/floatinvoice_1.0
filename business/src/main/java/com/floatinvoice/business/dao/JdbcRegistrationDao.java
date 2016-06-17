@@ -146,9 +146,9 @@ public class JdbcRegistrationDao implements RegistrationDao {
 
 	@Override
 	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
-		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getSmeAcronym());
+		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getAcronym());
 		final int orgId = (int) orgInfo.get("COMPANY_ID");
-		final int userId = orgReadDao.findUserId(msg.getSmeAcronym());		
+		final int userId = orgReadDao.findUserId(msg.getAcronym());		
 		final LobCreator lobCreator = lobHandler.getLobCreator();
 		final byte [] bytes = msg.getFile().getBytes();
 		jdbcTemplate.getJdbcOperations().update( new PreparedStatementCreator() {			

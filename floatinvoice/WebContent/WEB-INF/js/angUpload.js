@@ -22,7 +22,7 @@ angular.module('floatInvoiceListApp')
 
             // NOW UPLOAD THE FILES.
             $scope.uploadFiles = function () {
-                console.log("hi !!");
+                
                 var request = {
                     method: 'POST',
                     url: '/floatinvoice/invoice/upload?acro='+fiService.getAcronym(),

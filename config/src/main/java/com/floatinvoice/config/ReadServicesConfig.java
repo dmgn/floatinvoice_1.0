@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.floatinvoice.business.dao.BankInfoDao;
+import com.floatinvoice.business.dao.FileServiceDao;
 import com.floatinvoice.business.dao.FraudInvoiceInfoDao;
 import com.floatinvoice.business.dao.InvoiceFileUploadDao;
 import com.floatinvoice.business.dao.InvoiceInfoDao;
 import com.floatinvoice.business.dao.JdbcBankInfoDao;
+import com.floatinvoice.business.dao.JdbcFileServiceDao;
 import com.floatinvoice.business.dao.JdbcFraudInvoiceInfoDao;
 import com.floatinvoice.business.dao.JdbcInvoiceFileUploadDao;
 import com.floatinvoice.business.dao.JdbcInvoiceInfoDao;
@@ -59,5 +61,10 @@ public class ReadServicesConfig {
 	@Bean
 	public FraudInvoiceInfoDao fraudInvoiceInfoDao(){
 		return new JdbcFraudInvoiceInfoDao(dataSourceConfig.dataSource());
+	}
+	
+	@Bean
+	public FileServiceDao fileServiceDao(){
+		return new JdbcFileServiceDao(dataSourceConfig.dataSource(), orgReadDao(), dataSourceConfig.lobHandler());
 	}
 }

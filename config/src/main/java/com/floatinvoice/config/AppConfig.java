@@ -90,16 +90,27 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	} 
 	
 	
+	@Bean
+	public HandlerMapping RegistrationPageHandlerMapping(){
+		SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+		mapping.setOrder(3);
+
+		ParameterizableViewController pvcReg = new ParameterizableViewController();
+		pvcReg.setViewName("registerPage");
+		Map<String, ParameterizableViewController> sMap = Collections.singletonMap("/register", pvcReg);
+		mapping.setUrlMap(sMap);
+		return mapping;
+	}
 	
 	
 	@Bean
 	public HandlerMapping landingPageHandlerMapping(){
 		SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
 		mapping.setOrder(0);
-		ParameterizableViewController pvc = new ParameterizableViewController();
-		pvc.setViewName("loginPage");
-
-		mapping.setUrlMap(Collections.singletonMap("/login", pvc));
+		ParameterizableViewController pvcLogin = new ParameterizableViewController();
+		pvcLogin.setViewName("loginPage");
+		Map<String, ParameterizableViewController> sMap = Collections.singletonMap("/login", pvcLogin);
+		mapping.setUrlMap(sMap);
 		return mapping;
 	}
 	
@@ -170,6 +181,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		config.mapJspToUri("/register/signInPage", "registerSignInPage");
 		config.mapJspToUri("/register/orgInfoPage", "registerOrgInfoPage");
 		config.mapJspToUri("/register/usrInfoPage", "registerUserInfoPage");
+		//config.mapJspToUri("/register/docs", "registerDocsPage");
 		config.mapJspToUri("/finViewPage", "financierView");
 		config.mapJspToUri("/buyerView", "buyerView");
 		config.mapJspToUri("/adminView", "adminView");

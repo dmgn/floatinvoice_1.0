@@ -1,6 +1,7 @@
 package com.floatinvoice.business;
 
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.FileDetails;
 import com.floatinvoice.messages.InvoiceAccountInfoMsg;
 import com.floatinvoice.messages.InvoiceDtlsMsg;
 import com.floatinvoice.messages.ListMsg;
@@ -43,4 +44,6 @@ public interface InvoiceService {
 	ListMsg<InvoiceDtlsMsg> viewBuyerRejectedInvoices( String buyerOrgAcro);
 	
 	ListMsg<InvoiceDtlsMsg> viewBuyerAllegedInvoices( String buyerOrgAcro);
+	
+	ListMsg<FileDetails> viewAllInvoiceFiles (String acronym);
 }

@@ -1,70 +1,12 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html ng-app="validationApp" >
-<head>
-    <!-- CSS ===================== -->
-    <!-- load bootstrap -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="../css/angular-material.min.css">
-    <style>
-        body    { padding-top:30px; }
-    </style>
-    
-    <!-- JS ===================== -->
-    <!-- load angular -->
-<script src="../js/angular.min.js"></script>
-<script src="../js/angular-animate.min.js"></script>
-<script src="../js/angular-aria.min.js"></script>
-<script src="../js/angular-messages.min.js"></script>
-<script src="../js/angular-material.min.js"></script>
-      <script>
-        // create angular app
-        var validationApp = angular.module('validationApp', ['ngMaterial', 'ngMessages']);
 
-        validationApp.config(function($mdThemingProvider) {
-          $mdThemingProvider.theme('default')
-            .primaryPalette('light-blue')
-            .accentPalette('green');
-        });
-        // create angular controller
-        validationApp.controller('mainController', function($scope, $window, $http) {
-            $scope.user= {};
-            // function to submit the form after all validation has occurred            
-            $scope.submitForm = function() {
-                // check to make sure the form is completely valid
-                if ($scope.userForm.$valid) {
-                    
-                    $http({
-                        method:'POST',
-                        url:'/floatinvoice/register/usrInfo',
-                        data:$scope.user,
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        headers:{'Content-Type':'application/json'}
-                        }).then(function successCallback(response) {
-                            $window.location.replace('/floatinvoice/welcomePage');
-                            console.log(response);
-                          }, function errorCallback(response) {
-                            console.log(response);
-                      });
-                }
-            };
-        });
-    </script>
-</head>
+
 
 <!-- apply angular app and controller to our body -->
-<body ng-controller="mainController" >
-<div class="container">    
+ 
     <!-- PAGE HEADER -->
-    <div class="col-sm-8 col-sm-offset-2">
-    <img src = "../img/logo.jpg" height=70/>
-
-    <div>
-    <h2 class="page-header">Add Personal Information</h2>
-    </div>
-    <md-content layout-padding>
+    <div class="col-sm-8">
+     
+      <md-content layout-padding>
     <div>
       <form name="userForm" ng-submit="submitForm()" novalidate>
 <!--         <div layout-gt-xs="row">
@@ -98,7 +40,11 @@
        
         <md-input-container class="md-block" flex-gt-sm>
           <label>Bank Account Number</label>
-          <input type="text" name="bankAcctNo" ng-model="user.bankAcctNo">
+          <input type="text" name="bankAcctNo" ng-model="user.bankAcctNo" ng-pattern="/^([0-9]{10})$/" >
+          <div class="hint" ng-show="showHints">(##########)</div>
+          <div ng-messages="userForm.bankAcctNo.$error" ng-hide="showHints">
+            <div ng-message="pattern">########## - Please enter a valid acct number.</div>
+          </div>
         </md-input-container>
 
         <div layout-gt-xs="row">
@@ -108,11 +54,18 @@
          </md-input-container>
          <md-input-container class="md-block" flex-gt-sm>
           <label>IFSC Code</label>
-          <input type="text" name="ifscCode" ng-model="user.ifscCode"/>         
+          <input type="text" name="ifscCode" ng-model="user.ifscCode" ng-pattern="/^([0-9]{5})$/"/>  
+          <div class="hint" ng-show="showHints">(#####)</div>
+          <div ng-messages="userForm.ifscCode.$error" ng-hide="showHints">
+            <div ng-message="pattern">##### - Please enter a valid 5 digit IFSC code.</div>
+          </div>       
          </md-input-container>
         </div>    
         
-           <md-button type="submit" class="md-raised md-primary" ng-disabled="userForm.$invalid">Submit</md-button> 
+         <div style="float:right">
+            <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid || checkRespMsg()">Save</button>  
+            <button type="button" class="btn btn-primary" ng-disabled="checkRespMsg()? false : true" ng-Click="nextAction()">Next</button>  
+         </div>
      </form>
     </div>
   </md-content>
@@ -154,6 +107,3 @@
         </div>
     </form> -->
     </div>
-</div><!-- /container -->
-</body>
-</html>

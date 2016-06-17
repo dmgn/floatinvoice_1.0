@@ -19,4 +19,5 @@ public interface RegistrationDao {
 	
 	ListMsg<SupportDocDtls> summary(String acronym);
 
+	
 }

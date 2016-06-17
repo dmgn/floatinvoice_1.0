@@ -9,6 +9,7 @@ import com.floatinvoice.business.dao.InvoiceInfoDao;
 import com.floatinvoice.business.dao.OrgReadDao;
 import com.floatinvoice.common.OrgType;
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.FileDetails;
 import com.floatinvoice.messages.InvoiceAccountInfoMsg;
 import com.floatinvoice.messages.InvoiceDtlsMsg;
 import com.floatinvoice.messages.ListMsg;
@@ -168,6 +169,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 		Integer buyerOrgId = (Integer) buyerOrg.get("COMPANY_ID");
 		return invoiceInfoReadDao.viewBuyerAllegedInvoices(buyerOrgId);
 
+	}
+
+	@Override
+	public ListMsg<FileDetails> viewAllInvoiceFiles(String acronym) {
+		Map<String, Object> buyerOrg = orgReadDao.findOrgId(acronym);
+		Integer orgId = (Integer) buyerOrg.get("COMPANY_ID");
+		return new ListMsg<>(invoiceFileUploadDao.viewAllInvoiceFiles(orgId));
 	}
 	
 	

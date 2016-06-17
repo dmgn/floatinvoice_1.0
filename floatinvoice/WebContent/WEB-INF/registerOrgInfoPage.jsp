@@ -1,78 +1,12 @@
 
-<!-- index.html -->
-<!DOCTYPE html>
-<html ng-app="validationApp" >
-<head>
-    <!-- CSS ===================== -->
-    <!-- load bootstrap -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css"> 
-     <link rel="stylesheet" href="../css/angular-material.min.css">
-    <style>
-        body    { padding-top:30px; }
-    </style>
-    
-    <!-- JS ===================== -->
-<!-- load angular -->
-       <!-- Angular Material requires Angular.js Libraries -->
-   <script src="../js/angular.min.js"></script>
-   <script src="../js/angular-animate.min.js"></script>
-   <script src="../js/angular-aria.min.js"></script>
-   <script src="../js/angular-messages.min.js"></script>
-
-  <!-- Angular Material Library -->
-   <script src="../js/angular-material.min.js"></script>
-    <script>
-        // create angular app
-        var validationApp = angular.module('validationApp', ['ngMaterial', 'ngMessages']);
-         validationApp.config(function($mdThemingProvider) {
-          $mdThemingProvider.theme('default')
-            .primaryPalette('light-blue')
-            .accentPalette('green');
-        });
-        // create angular controller
-        validationApp.controller('mainController', function($scope, $window, $http) {
-            $scope.user= {};
-            $scope.states = ('Andhra Pradesh,Arunachal Pradesh,Assam,Bihar,Chhattisgarh,Goa,Gujarat,Haryana,Himachal Pradesh,Jammu and Kashmir,Jharkhand,Karnataka,Kerala,Madhya Pradesh,Maharashtra,Manipur,Meghalaya,Mizoram,Nagaland,Orissa,Punjab,Rajasthan,Sikkim,Tamil Nadu,Tripura,Uttarakhand,Uttar Pradesh,West Bengal,Tamil Nadu,Tripura,Andaman and Nicobar Islands,Chandigarh,Dadra and Nagar Haveli,Daman and Diu,Delhi,Lakshadweep,Pondicherry').split(',').map(function(state) {
-            return {abbrev: state};
-            });
-            // function to submit the form after all validation has occurred            
-            $scope.submitForm = function() {
-                // check to make sure the form is completely valid
-                if ($scope.userForm.$valid) {
-                    
-                    $http({
-                        method:'POST',
-                        url:'/floatinvoice/register/corpInfo',
-                        data:$scope.user,
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        headers:{'Content-Type':'application/json'
-                                 }
-                        }).then(function successCallback(response) {
-                            $window.location.replace('/floatinvoice/register/usrInfoPage');
-                            console.log(response);
-                          }, function errorCallback(response) {
-                            console.log(response);
-                      });
-                }
-            };
-        });
-    </script>
-</head>
-
-<!-- apply angular app and controller to our body -->
-<body ng-controller="mainController">
-<div class="container">
-<div class="col-sm-8 col-sm-offset-2">
-    <img src = "../img/logo.jpg" height=100/>
-    <!-- PAGE HEADER -->
-    <div>
-        <h2 class="page-header">Add Company Information</h2>
-    </div>
+<div class="col-sm-8">
     <md-content layout-padding>
     <div>
-      <form name="userForm" ng-submit="submitForm()" novalidate>
+    <span >
+       <h5 ng-style={color:'green'}>{{respMsg}}</h5>
+       <h5 ng-style={color:'red'}>{{errRespMsg}}</h5>
+     </span>
+      <form name="userForm" style="margin-top: 5em;" ng-submit="submitForm()" novalidate>
 <!--         <div layout-gt-xs="row">
           <md-input-container class="md-block" flex-gt-xs>
             <label>Company (Disabled)</label>
@@ -153,11 +87,11 @@
                     Buyer
                 </label>
               </div>
-           <md-button type="submit" class="md-raised md-primary" ng-disabled="userForm.$invalid">Submit</md-button> 
+             <div style="float:right">
+              <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid || checkRespMsg()">Save</button>  
+              <button type="button" class="btn btn-primary" ng-disabled="checkRespMsg()? false : true" ng-Click="nextAction()">Next</button>  
+            </div>
      </form>
     </div>
   </md-content>
 </div><!-- col-sm-8 -->
-</div><!-- /container -->
-</body>
-</html>

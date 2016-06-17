@@ -3,13 +3,13 @@
 
 <div id="example">
     <div class="demo-section k-content" ng-controller="NewUploadController">
-        <div class="row">
+        <div class="row" style="padding-top: 1em;padding-bottom: 1em" >
             <div class="col-sm-9"></div>
             <div class="col-sm-3">
              <button type="button" style="float:right" class="btn btn-primary" ng-click=downloadNow()>Download Invoice Template</button>
             </div>
         </div>
-        <div>
+        <div class="well" >
             <h4>Upload Invoice Files (in xlsx format)</h4>
             <input name="file"
                    type="file"
@@ -19,8 +19,39 @@
                    />
         </div>
         <div style="padding-top: 1em;">
-            <h4>Console</h4>
-            <div class="console"></div>
+            <h4> File list </h4>
+            <table class="table table-striped">
+
+                <tr>
+                  <th><a href="" ng-click="sortField = 'fileName'">Name</td>
+                  <th><a href="" ng-click="sortField = 'insertDt'">Upload Time</th>
+                  <th><a href="" ng-click="sortField = 'status'">Status</th>
+                </tr>
+                <tr>
+                     <th>
+                        <input type="text" ng-model="search.fileName" placeholder="search for file name" class="input-sm form-control"/>
+                    </th>
+                     <th>
+                        <input type="text" ng-model="search.insertDt" placeholder="search for date" class="input-sm form-control"/>
+                    </th>        
+                    <th>
+                        <input type="text" ng-model="search.status" placeholder="search for status" class="input-sm form-control"/>
+                    </th>                   
+                </tr>
+                <tr dir-paginate="file in fileList | filter:search | orderBy:sortField| itemsPerPage: 10">
+                    <td><a ng-href="{{getUrl(file)}}">{{file.fileName}}</a></td>
+                    <td>{{file.insertDt}}</td>
+                    <td>{{file.status}}</td>
+                    <!-- <td ng-if="item.fraudTx == false">
+                    <button type="button" class="btn btn-primary" ng-click=collectNow(item.refId)>Collect Now</button>
+                    </td> -->
+                </tr>
+            </table>
+          <div align="center">
+            <dir-pagination-controls/>
+          </div>
+
+
         </div>
     </div>
 <!-- removeUrl: 'remove' -->

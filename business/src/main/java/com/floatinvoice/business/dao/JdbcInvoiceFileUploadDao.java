@@ -2,6 +2,7 @@ package com.floatinvoice.business.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.lob.LobCreator;
@@ -27,6 +29,7 @@ import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.FileDetails;
+import com.floatinvoice.messages.InvoiceDtlsMsg;
 import com.floatinvoice.messages.UploadMessage;
 
 @Repository
@@ -193,7 +196,7 @@ public class JdbcInvoiceFileUploadDao implements InvoiceFileUploadDao {
 	
 	@Override
 	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
-		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getSmeAcronym());
+		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getAcronym());
 		final int orgId = (int) orgInfo.get("COMPANY_ID");		
 		final int userId = orgReadDao.findUserId(UserContext.getUserName());		
 		final LobCreator lobCreator = lobHandler.getLobCreator();
@@ -253,7 +256,29 @@ public class JdbcInvoiceFileUploadDao implements InvoiceFileUploadDao {
 		return row;
 	}
 
+	@Override
+	public List<FileDetails> viewAllInvoiceFiles(int orgId) {
+		final String sql = "SELECT * FROM FILE_STORE WHERE COMPANY_ID = :companyId order by INSERT_DT DESC LIMIT 25 "; 
+		MapSqlParameterSource paramMap = new MapSqlParameterSource();
+		paramMap.addValue("companyId", orgId);
+		List<FileDetails> result = jdbcTemplate.query(sql, paramMap, new FileDetailsRowMapper());		
+		return result;
+	}
 
+	private class FileDetailsRowMapper implements RowMapper<FileDetails>{
+
+		@Override
+		public FileDetails mapRow(ResultSet rs, int arg1) throws SQLException {
+			FileDetails fd = new FileDetails();
+			fd.setFileName(rs.getString("FILE_NAME"));
+			fd.setInsertDt(rs.getDate("INSERT_DT"));
+			fd.setStatus(rs.getInt("ENQ_FLAG") == 1 ? "Processed" : "Unprocessed");
+			fd.setRefId(rs.getString("ref_Id"));
+			return fd;
+		}
+		
+		
+	}
 	
 
 }

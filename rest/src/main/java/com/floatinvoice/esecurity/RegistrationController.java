@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.floatinvoice.business.ProfileService;
 import com.floatinvoice.business.RegistrationService;
+import com.floatinvoice.common.OrgType;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.ListMsg;
@@ -22,6 +24,7 @@ import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep3UserPersonalDtlsMsg;
 import com.floatinvoice.messages.SupportDocDtls;
 import com.floatinvoice.messages.UploadMessage;
+import com.floatinvoice.messages.UserProfile;
 
 @Controller
 @RequestMapping("/register")
@@ -33,6 +36,15 @@ public class RegistrationController {
 	@Autowired
 	RegistrationService registrationSvc;
 
+ 
+	@RequestMapping(value = { "/docs"}, method = RequestMethod.GET)
+    public ModelAndView docUpload() {
+		UserProfile userProfile = profileService.fetchUserProfile(UserContext.getUserName());
+        ModelAndView model = new ModelAndView();
+        model.addObject("acronym", userProfile.getOrgAcronym());
+        model.setViewName("registerDocsPage");
+        return model;
+    }
 	
 	@RequestMapping(value = { "/signInInfo"}, method = RequestMethod.POST)
     public ResponseEntity<BaseMsg> signInInfo(@RequestBody RegistrationStep1SignInDtlsMsg regStep1,
@@ -64,7 +76,7 @@ public class RegistrationController {
     		@RequestParam(value="file", required=true) MultipartFile file) throws Exception {    
 		UploadMessage uploadMsg = new UploadMessage(file);
     	uploadMsg.setFileName(file.getOriginalFilename());
-    	uploadMsg.setSmeAcronym(acro);
+    	uploadMsg.setAcronym(acro);
     	uploadMsg.setCategory(category);
     	return new ResponseEntity<>(registrationSvc.uploadSupportDocs(uploadMsg), HttpStatus.OK);
 	}

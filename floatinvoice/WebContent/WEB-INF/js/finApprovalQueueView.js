@@ -139,4 +139,10 @@ angular.module('finfloatInvoiceListApp')
       }
     };
 
+      $scope.onSelect = function(e) {
+                    var message = $.map(e.files, function(file) { return file.name; }).join(", ");
+                   // kendoConsole.log("event :: select (" + message + ")");
+            };
+
+
   }])  ;

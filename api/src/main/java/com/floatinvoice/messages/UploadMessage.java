@@ -22,7 +22,7 @@ public class UploadMessage extends BaseMsg{
 	
 	private String fileName;
 	
-	private String smeAcronym;
+	private String acronym;
 	
 	private String category;
 
@@ -42,12 +42,12 @@ public class UploadMessage extends BaseMsg{
 		this.fileName = fileName;
 	}
 
-	public String getSmeAcronym() {
-		return smeAcronym;
+	public String getAcronym() {
+		return acronym;
 	}
 
-	public void setSmeAcronym(String smeAcronym) {
-		this.smeAcronym = smeAcronym;
+	public void setAcronym(String acronym) {
+		this.acronym = acronym;
 	}
 
 	public String getCategory() {

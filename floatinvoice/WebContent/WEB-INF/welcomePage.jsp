@@ -67,8 +67,8 @@
      $scope.vtabs = [
           { link : '#/homePg', label : 'Home' },
           { link : '#/payments', label : 'Payments' },
-          { link : '#/reports', label : 'Reports' },
-          { link : '#/profile', label : 'Profile' },
+          { link : '#/reports', label : 'Reports' }/*,
+          { link : '#/profile', label : 'Profile' },*/
           
         ];
      $scope.vselectedTab = $scope.vtabs[0];   

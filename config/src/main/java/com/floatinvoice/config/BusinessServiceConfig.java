@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 import com.floatinvoice.business.BankService;
 import com.floatinvoice.business.BankServiceImpl;
+import com.floatinvoice.business.FileService;
+import com.floatinvoice.business.FileServiceImpl;
 import com.floatinvoice.business.FraudInvoiceService;
 import com.floatinvoice.business.FraudInvoiceServiceImpl;
 import com.floatinvoice.business.InvoiceService;
@@ -49,5 +51,10 @@ public class BusinessServiceConfig {
 	public FraudInvoiceService fraudInvoiceService(){
 		return new FraudInvoiceServiceImpl(readServicesConfig.fraudInvoiceInfoDao(), 
 				readServicesConfig.orgReadDao());
+	}
+	
+	@Bean
+	public FileService fileService(){
+		return new FileServiceImpl(readServicesConfig.fileServiceDao());
 	}
 }

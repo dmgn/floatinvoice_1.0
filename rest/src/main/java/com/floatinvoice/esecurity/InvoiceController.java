@@ -17,6 +17,7 @@ import com.floatinvoice.business.InvoiceService;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.BuyerActionMsg;
+import com.floatinvoice.messages.FileDetails;
 import com.floatinvoice.messages.FraudInvoiceDtls;
 import com.floatinvoice.messages.InvoiceAccountInfoMsg;
 import com.floatinvoice.messages.InvoiceDtlsMsg;
@@ -85,7 +86,7 @@ public class InvoiceController {
     		@RequestParam(value="file", required=true) MultipartFile file) throws Exception {    	
     	UploadMessage uploadMsg = new UploadMessage(file);
     	uploadMsg.setFileName(file.getOriginalFilename());
-    	uploadMsg.setSmeAcronym(acro);    	
+    	uploadMsg.setAcronym(acro);    	
         return new ResponseEntity<BaseMsg>(invoiceService.uploadInvoiceFile(uploadMsg), HttpStatus.OK);
     }
     
@@ -139,5 +140,10 @@ public class InvoiceController {
     @RequestMapping(value = { "/manage/approval"}, method = RequestMethod.POST)
     public  ResponseEntity<BaseMsg> bidInvoices(@RequestBody BuyerActionMsg request) throws Exception {
     	return new ResponseEntity<BaseMsg>(invoiceService.managePendingInvoices(request.getRefId(), request.getAction()), HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = { "/viewFiles"}, method = RequestMethod.GET)
+    public  ResponseEntity<ListMsg<FileDetails>> viewInvoiceFiles(@RequestParam(value="acro", required=true) String acronym) {
+        return new ResponseEntity<ListMsg<FileDetails>>(invoiceService.viewAllInvoiceFiles(acronym), HttpStatus.OK);
     }
 }
