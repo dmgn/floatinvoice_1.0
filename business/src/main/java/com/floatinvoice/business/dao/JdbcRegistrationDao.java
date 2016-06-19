@@ -148,7 +148,7 @@ public class JdbcRegistrationDao implements RegistrationDao {
 	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
 		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getAcronym());
 		final int orgId = (int) orgInfo.get("COMPANY_ID");
-		final int userId = orgReadDao.findUserId(msg.getAcronym());		
+		final int userId = orgReadDao.findUserId(UserContext.getUserName());		
 		final LobCreator lobCreator = lobHandler.getLobCreator();
 		final byte [] bytes = msg.getFile().getBytes();
 		jdbcTemplate.getJdbcOperations().update( new PreparedStatementCreator() {			
@@ -184,10 +184,10 @@ public class JdbcRegistrationDao implements RegistrationDao {
 		
 		Map<String, Object> orgInfo = orgReadDao.findOrgId(acronym);
 		final int orgId = (int) orgInfo.get("COMPANY_ID");
-		final String sql = "SELECT FS.FILE_NAME, FS.REF_ID, FS.INSERT_DT, CLI.EMAIL FROM FILE_STORE FS"
+		final String sql = "SELECT DS.FILE_NAME, DS.REF_ID, DS.INSERT_DT, DS.CATEGORY, CLI.EMAIL FROM DOCS_STORE DS"
 				+ " JOIN CLIENT_LOGIN_INFO CLI"
-				+ " ON CLI.USER_ID = FS.USER_ID"
-				+ " WHERE FS.COMPANY_ID = :orgId";
+				+ " ON CLI.USER_ID = DS.USER_ID"
+				+ " WHERE DS.COMPANY_ID = :orgId";
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("orgId", orgId);
 		List<SupportDocDtls> list = jdbcTemplate.query(sql, paramMap, new SupportDocRowMapper());
@@ -206,6 +206,7 @@ public class JdbcRegistrationDao implements RegistrationDao {
 			rec.setRefId(rs.getString("REF_ID"));
 			rec.setTimest(rs.getDate("INSERT_DT"));
 			rec.setUser(rs.getString("EMAIL"));
+			rec.setCateg(rs.getString("CATEGORY"));
 			return rec;
 		}
 		

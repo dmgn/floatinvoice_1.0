@@ -8,7 +8,11 @@
      
       <md-content layout-padding>
     <div>
-      <form name="userForm" ng-submit="submitForm()" novalidate>
+     <span >
+       <h5 ng-style={color:'green'}>{{respMsg}}</h5>
+       <h5 ng-style={color:'red'}>{{errRespMsg}}</h5>
+     </span>
+      <form name="userForm" style="margin-top: 5em;" ng-submit="submitForm()" novalidate>
 <!--         <div layout-gt-xs="row">
           <md-input-container class="md-block" flex-gt-xs>
             <label>Company (Disabled)</label>

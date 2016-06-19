@@ -31,6 +31,9 @@ public class SupportDocDtls extends BaseMsg {
 	@XmlElement(name="user")	
 	String user;
 
+	@XmlElement(name="categ")	
+	String categ;
+	
 	public String getFileName() {
 		return fileName;
 	}
@@ -69,6 +72,14 @@ public class SupportDocDtls extends BaseMsg {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public String getCateg() {
+		return categ;
+	}
+
+	public void setCateg(String categ) {
+		this.categ = categ;
 	}
 	
 	
