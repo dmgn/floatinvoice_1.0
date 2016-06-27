@@ -44,6 +44,22 @@ public class LoginControllerTest {
 	}
 	
 	@Test
+	public void testUsrLogin() throws Exception{
+		
+		LoginDtlsMsg msg = new LoginDtlsMsg();
+		msg.setEmail("test@gmail.com");
+		msg.setPasswd("test123");
+		
+		System.out.println(" Json " + objMapper.writeValueAsString(msg));
+		
+		RequestBuilder req = post("/usrLogin")
+				.header("remote-user", "test@gmail.com")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objMapper.writeValueAsString(msg));
+		MvcResult res = mockMvc.perform(req).andDo(print()).andReturn();
+	}
+	
+	@Test
 	public void testLoginForSession() throws Exception{
 		LoginDtlsMsg msg = new LoginDtlsMsg();
 		msg.setEmail("askforgautam@gmail.com");

@@ -146,9 +146,10 @@ public class JdbcRegistrationDao implements RegistrationDao {
 
 	@Override
 	public BaseMsg fileUpload(final UploadMessage msg) throws Exception {
-		Map<String, Object> orgInfo = orgReadDao.findOrgId(msg.getAcronym());
-		final int orgId = (int) orgInfo.get("COMPANY_ID");
-		final int userId = orgReadDao.findUserId(UserContext.getUserName());		
+		//final int userId = orgReadDao.findUserId(UserContext.getUserName());	
+		Map<String, Object> clientDtls = orgReadDao.findOrgAndUserId(UserContext.getUserName());
+		final int orgId = (int) clientDtls.get("COMPANY_ID");
+		final int userId = (int) clientDtls.get("USER_ID");
 		final LobCreator lobCreator = lobHandler.getLobCreator();
 		final byte [] bytes = msg.getFile().getBytes();
 		jdbcTemplate.getJdbcOperations().update( new PreparedStatementCreator() {			
@@ -181,9 +182,13 @@ public class JdbcRegistrationDao implements RegistrationDao {
 
 	@Override
 	public ListMsg<SupportDocDtls> summary(String acronym) {
-		
-		Map<String, Object> orgInfo = orgReadDao.findOrgId(acronym);
-		final int orgId = (int) orgInfo.get("COMPANY_ID");
+		int orgId = 0;
+		if ( acronym == null ){
+			orgId = orgReadDao.findOrgIdByEmail(UserContext.getUserName());
+		}else{
+			Map<String, Object> orgInfo = orgReadDao.findOrgId(acronym);
+			orgId = (int) orgInfo.get("COMPANY_ID");
+		}
 		final String sql = "SELECT DS.FILE_NAME, DS.REF_ID, DS.INSERT_DT, DS.CATEGORY, CLI.EMAIL FROM DOCS_STORE DS"
 				+ " JOIN CLIENT_LOGIN_INFO CLI"
 				+ " ON CLI.USER_ID = DS.USER_ID"

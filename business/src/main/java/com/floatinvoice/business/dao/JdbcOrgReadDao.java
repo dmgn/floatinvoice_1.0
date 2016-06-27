@@ -66,6 +66,20 @@ public class JdbcOrgReadDao implements OrgReadDao {
 		Integer userId = jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
 		return userId;
 	}
+	
+	@Override
+	public Integer findOrgIdByEmail(String userEmail) {
+		final String sql = "SELECT O.COMPANY_ID FROM ORGANIZATION_INFO O "
+				+ " JOIN USER_ORGANIZATION_MAP UOM "
+				+ " ON O.COMPANY_ID = UOM.COMPANY_ID "
+				+ " JOIN CLIENT_LOGIN_INFO CLI "
+				+ " ON CLI.USER_ID = UOM.USER_ID "
+				+ " WHERE CLI.EMAIL = :email";
+		MapSqlParameterSource paramMap = new MapSqlParameterSource();
+		paramMap.addValue("email", userEmail);
+		Integer orgId = jdbcTemplate.queryForObject(sql, paramMap, Integer.class);
+		return orgId;
+	}
 
 	@Override
 	public Map<String, Object> findOrgAndUserId(String userEmail) {

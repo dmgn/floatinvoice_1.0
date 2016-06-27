@@ -33,5 +33,16 @@ public class DataSourceConfig {
     	LobHandler lobHandler = new DefaultLobHandler();
     	return lobHandler;
     }
+    
+    @Bean
+    public DataSource siteDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
+        dataSource.setUrl(environment.getRequiredProperty("site.jdbc.url"));
+        dataSource.setUsername(environment.getRequiredProperty("site.jdbc.username"));
+        dataSource.setPassword(environment.getRequiredProperty("site.jdbc.password"));
+        return dataSource;
+    }
+    
 
 }

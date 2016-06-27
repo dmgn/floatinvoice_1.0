@@ -8,6 +8,8 @@ public interface ProfileDao {
 	
 	int findUserRegistrationStatus( String userEmail );
 	
+	boolean verifyTempUserProfileExists(String userEmail);
+	
 	/*boolean isCompanyRegistered( String userEmail );
 	
 	boolean isPersonalInfoRegistered( String userEmail );*/

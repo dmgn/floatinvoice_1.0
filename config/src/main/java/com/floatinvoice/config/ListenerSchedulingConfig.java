@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.floatinvoice.business.listeners.FileProcessor;
 import com.floatinvoice.business.listeners.InvoicePoolNotifier;
 import com.floatinvoice.business.listeners.InvoicePoolProcessor;
+import com.floatinvoice.business.listeners.ThirdPartyEmailNotifier;
 
 @Configuration
 @EnableScheduling
@@ -16,6 +17,8 @@ public class ListenerSchedulingConfig {
 	@Autowired
 	ReadServicesConfig readServicesConfig;
 	
+	@Autowired
+	BusinessServiceConfig businessServiceConfig;
 	
 	@Bean
 	public FileProcessor fileProcessor(){
@@ -30,5 +33,10 @@ public class ListenerSchedulingConfig {
 	@Bean
 	public InvoicePoolNotifier invoicePoolNotifier(){
 		return new InvoicePoolNotifier(readServicesConfig.invoiceInfoReadDao());
+	}
+	
+	@Bean
+	public ThirdPartyEmailNotifier thirdPartyNotifier(){
+		return new ThirdPartyEmailNotifier(readServicesConfig.thirdPartyNotificationDao(), businessServiceConfig.emailService());
 	}
 }

@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.floatinvoice.business.ProfileService;
 import com.floatinvoice.business.RegistrationService;
-import com.floatinvoice.common.OrgType;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.ListMsg;
@@ -36,6 +35,11 @@ public class RegistrationController {
 	@Autowired
 	RegistrationService registrationSvc;
 
+	@RequestMapping(value = { "/usrInfo"}, method = RequestMethod.GET)
+    public UserProfile userInfo(@RequestParam(value="usr", required=true) String usr) {
+		UserProfile userProfile = profileService.fetchUserProfile(usr);
+        return userProfile;
+    }
  
 	@RequestMapping(value = { "/docs"}, method = RequestMethod.GET)
     public ModelAndView docUpload() {
@@ -70,20 +74,20 @@ public class RegistrationController {
 	}
 	
 	@RequestMapping(value = { "/upload"}, method = RequestMethod.POST)
-    public  ResponseEntity<BaseMsg> uploadFile(@RequestParam(value="acro", required=true) String acro,
+    public  ResponseEntity<BaseMsg> uploadFile(/*@RequestParam(value="acro", required=true) String acro,*/
     		@RequestParam(value="filename", required=false) String fileName,
     		@RequestParam(value="category", required=true) String category,
     		@RequestParam(value="file", required=true) MultipartFile file) throws Exception {    
 		UploadMessage uploadMsg = new UploadMessage(file);
     	uploadMsg.setFileName(file.getOriginalFilename());
-    	uploadMsg.setAcronym(acro);
+    	//uploadMsg.setAcronym(acro);
     	uploadMsg.setCategory(category);
     	return new ResponseEntity<>(registrationSvc.uploadSupportDocs(uploadMsg), HttpStatus.OK);
 	}
 	
 	
 	@RequestMapping(value = { "/docs/summary"}, method = RequestMethod.GET)
-    public  ResponseEntity<ListMsg<SupportDocDtls>> summary(@RequestParam(value="acro", required=true) String acro) throws Exception {    
+    public  ResponseEntity<ListMsg<SupportDocDtls>> summary(@RequestParam(value="acro", required=false) String acro) throws Exception {    
 		
     	return new ResponseEntity<>(registrationSvc.summary(acro), HttpStatus.OK);
 	}

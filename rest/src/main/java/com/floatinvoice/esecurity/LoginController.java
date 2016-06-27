@@ -1,19 +1,22 @@
 package com.floatinvoice.esecurity;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.floatinvoice.business.ProfileService;
 import com.floatinvoice.common.OrgType;
 import com.floatinvoice.common.RegistrationStatusEnum;
 import com.floatinvoice.common.UserContext;
+import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.LoginDtlsMsg;
 import com.floatinvoice.messages.UserProfile;
 
@@ -131,6 +134,27 @@ public class LoginController {
         return model;
     }
     
+    @RequestMapping(value = "/usrLogin", method = RequestMethod.POST)
+    public ResponseEntity<BaseMsg> tmpUserLogin(@RequestBody LoginDtlsMsg loginDtlsMsg, HttpServletRequest request, HttpSession session) {
+    	String email = UserContext.getUserName();
+    	if(profileService.verifyTempUserProfileExists(email)){
+    		session.setAttribute("remote-user", email);
+    	}// UserId and Password Validation
+        return new ResponseEntity<>(new BaseMsg(), HttpStatus.OK);
+    }
+    
+    
+    @RequestMapping(value = "/docUpload", method = RequestMethod.GET)
+    public ModelAndView docUpload(HttpSession session) {
+        
+    	String email = UserContext.getUserName();
+    	if(profileService.verifyTempUserProfileExists(email)){
+    		session.setAttribute("remote-user", email);
+    	}    	
+    	ModelAndView model = new ModelAndView();
+        model.setViewName("registerDocsPage");
+        return model;
+    }
     
     protected UserProfile initializeSession(String email, HttpSession session){
     	if(session != null){

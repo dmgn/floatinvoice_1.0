@@ -29,8 +29,16 @@
   <script src="js/angularModalService.js"></script>
   <script src="js/dirPagination.js"></script>
   <script src="js/angular-route.min.js"></script>
-  <script src="js/appAdminView.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-route-segment/1.4.0/angular-route-segment.min.js"></script>
+
+  <script src="js/appAdminView.js"></script>
+  <script src="js/adminManageEnquiry.js"></script>
+  <script src="js/adminHome.js"></script>
+  <script src="js/adminEnquiryListView.js"></script>
+  <script src="js/adminPendingEnquiryListView.js"></script>
+  <script src="js/adminStagedEnquiryListView.js"></script>
+  <script src="js/adminReleasedEnquiryListView.js"></script>
+
   <script>
     adminfloatInvoiceListApp.service('AdminAcroNameService', function(){
       this.getAcronym = function(){
@@ -41,7 +49,7 @@
       function ($scope, $location) {
       $scope.adtabs = [         
           { link : '#/adHome', label : 'Home' },
-          { link : '#/adDashBoard', label : 'Dashboard' }
+          { link : '#/adManageEnquiry', label : 'Manage Enquiries' }
         ];     
       var index = -1;
       var adtabList =  $scope.adtabs;
@@ -77,7 +85,7 @@
       </div>
       <div class="col-sm-7">
         <ul class="nav nav-tabs nav-pills nav-justified" ng-controller="AdminTabsCtrl">
-          <li ng-class="adtabClass(btab, 'justified')" ng-repeat="adtab in adtabs" tab="adtab"><a href="{{adtab.link}}" ng-click="adsetSelectedTab(adtab, 'justified')">{{adtab.label}}</a></li>
+          <li ng-class="adtabClass(adtab, 'justified')" ng-repeat="adtab in adtabs" tab="adtab"><a href="{{adtab.link}}" ng-click="adsetSelectedTab(adtab, 'justified')">{{adtab.label}}</a></li>
         </ul>              
       </div>
       <div class="col-sm-2 well well-sm">

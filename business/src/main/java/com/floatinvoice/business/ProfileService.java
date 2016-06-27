@@ -11,4 +11,7 @@ public interface ProfileService {
 	boolean isPersonalInfoRegistered( String userEmail );*/
 	
 	int findUserRegistrationStatus(String userEmail);
+	
+	boolean verifyTempUserProfileExists(String userEmail);
+
 }

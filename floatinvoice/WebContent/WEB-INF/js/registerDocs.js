@@ -4,7 +4,7 @@
               this.getAcronym = function(){
               return "${acronym}";
          };
-        });
+        })
         .controller("RegistrationDocsController", ['$scope', 'fiService', function($scope, fiService){
             $scope.onSelect = function(e) {
                     var message = $.map(e.files, function(file) { return file.name; }).join(", ");

@@ -1,8 +1,13 @@
 package com.floatinvoice.messages;
 
-public class UserProfile {
+public class UserProfile extends BaseMsg{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String orgAcronym;
 	
 	private String email;

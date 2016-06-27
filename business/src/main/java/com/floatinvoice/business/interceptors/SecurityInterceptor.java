@@ -11,7 +11,8 @@ public class SecurityInterceptor extends AbstractInterceptor{
 	public static boolean isHomePageController(HttpServletRequest request){
 		
 		if(request.getRequestURI().contains("loginSubmit") || 
-				request.getRequestURI().contains("signInInfo") ){
+				request.getRequestURI().contains("signInInfo")  || 
+				request.getRequestURI().endsWith("/loginpage")){
 			return true;
 		}
 		return false;
@@ -40,7 +41,10 @@ public class SecurityInterceptor extends AbstractInterceptor{
 	}
 	
 	public static String lookupUserName(HttpServletRequest request){
-		String userName = request.getHeader("remote-user");
+		String userName = null;
+		userName = (String) request.getAttribute("remote-user");
+		if ( userName == null )
+			userName = request.getHeader("remote-user");
 		return userName;		
 	}
 	

@@ -5,7 +5,9 @@ public enum OrgType {
 	SELLER(1, "SELLER"),
 	BANK(2, "BANK"),
 	BUYER(3, "BUYER"),
-	ADMIN(4, "ADMIN");
+	ADMIN(4, "ADMIN"),
+	TMPBUYER(5, "TMPBUYER"),
+	NBFC(6, "NBFC");
 
 	private int code;
 	private String text;

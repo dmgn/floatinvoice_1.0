@@ -185,6 +185,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		config.mapJspToUri("/finViewPage", "financierView");
 		config.mapJspToUri("/buyerView", "buyerView");
 		config.mapJspToUri("/adminView", "adminView");
+		config.mapJspToUri("/loginpage", "tmpLogin");
 		return config;
 	}
 	

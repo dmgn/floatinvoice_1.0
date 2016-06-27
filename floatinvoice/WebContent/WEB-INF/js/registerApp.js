@@ -1,6 +1,5 @@
  // create angular app
-  var registrationApp = angular.module('registrationApp',
-   ['ngRoute', 'route-segment', 'view-segment', 
+  var registrationApp = angular.module('registrationApp', ['ngRoute', 'route-segment', 'view-segment', 
   'ngMaterial', 'ngMessages','kendo.directives', 'angularModalService', 'ngAnimate']);
       /*  registrationApp.config(function($mdThemingProvider) {
           $mdThemingProvider.theme('default')
@@ -42,11 +41,11 @@ registrationApp.config(function ($locationProvider, $routeProvider, $routeSegmen
 
  });
 
-registrationApp.service('fiService', function(){
+/*registrationApp.service('fiService', function(){
   this.getAcronym = function(){
-    return "COTIND";
+    return "${acronym}";
   };
-});
+});*/
 
         // create angular controller
 registrationApp.controller('RegistrationController', ['$scope', '$location', function($scope, $location) {

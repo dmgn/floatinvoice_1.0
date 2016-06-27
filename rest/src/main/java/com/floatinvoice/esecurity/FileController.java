@@ -29,7 +29,7 @@ public class FileController {
     public  void downloadSupportDocs(HttpServletResponse response, 
     		@RequestParam(value="refId", required=true) String refId,
     		@RequestParam(value="fileName", required=true) String fileName,
-    		@RequestParam(value="acro", required=true) String acro,
+    		@RequestParam(value="acro", required=false) String acro,
     		@RequestParam(value="type", required=true) String type) throws IOException {
         ByteMsg byteMsg = fileService.downloadSupportDocs(refId);
         byte [] bytes = byteMsg.getBytes();

@@ -1,0 +1,41 @@
+
+  <table ng-controller="EnquiryStagedViewCtrl" class="table table-striped">
+    <tr>
+      <th><a href="" ng-click="sortField = 'contactName'">Contact Name</td>
+      <th><a href="" ng-click="sortField = 'email'">Email</td>
+      <th><a href="" ng-click="sortField = 'phone'"> Phone</td>
+      <th><a href="" ng-click="sortField = 'location'">Location</th>
+      <th><a href="" ng-click="sortField = 'enqDate'">Enquiry Date</th>
+      <th/>
+    </tr>
+    <tr>
+        <th>
+            <input type="text" ng-model="search.contactName" placeholder="search for contactName" class="input-sm form-control"/>
+        </th>
+        <th>
+            <input type="text" ng-model="search.email" placeholder="search for email" class="input-sm form-control"/>
+        </th>        
+        <th>
+            <input type="text" ng-model="search.phone" placeholder="search for phone" class="input-sm form-control"/>
+        </th>
+        <th>
+            <input type="text" ng-model="search.location" placeholder="search for location" class="input-sm form-control" />
+        </th>        
+         <th>
+            <input type="text" ng-model="search.enqDate" placeholder="search for enquiry Date" class="input-sm form-control" />
+        </th>  
+    </tr>
+    <tr dir-paginate="item in enquiries | filter:search | orderBy:sortField| itemsPerPage: 10">
+      <td>{{item.contactName}}</td>
+      <td>{{item.email}}</td>
+      <td>{{item.phone}}</td>
+      <td>{{item.location}}</td>
+      <td>{{item.enqDate}}</td>
+      <td>
+      <button type="button" class="btn btn-primary" ng-click=notify(item.refId)>Notify Third Party</button>
+      </td>
+    </tr>
+  </table>
+  <div align="center">
+    <dir-pagination-controls/>
+  </div>

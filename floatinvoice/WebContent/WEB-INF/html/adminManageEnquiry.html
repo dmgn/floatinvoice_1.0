@@ -1,0 +1,25 @@
+ <style>
+    table, th , td  {
+      /*border: 1px solid grey;*/
+      border-collapse: collapse;
+      padding: 10px;
+    }
+    table tr:nth-child(odd) {
+      background-color: #f1f1f1;
+    }
+    table tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+</style>
+
+
+    
+    <div class="row">       
+        <ul class="nav nav-tabs nav-justified" ng-controller="ManageEnquiryCtrl">
+          <li ng-class="adtabClass(adtab, 'justified')" ng-repeat="adtab in adtabs" tab="adtab"><a href="{{adtab.link}}" ng-click="adsetSelectedTab(adtab, 'justified')">{{adtab.label}}</a></li>
+
+
+        </ul>
+        <div app-view-segment="1"></div>     
+    </div>
+    <br/> 

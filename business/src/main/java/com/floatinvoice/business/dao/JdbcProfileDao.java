@@ -55,6 +55,15 @@ public class JdbcProfileDao implements ProfileDao {
 		return (int)result.get("REGISTRATION_STATUS");
 	}
 
+	@Override
+	public boolean verifyTempUserProfileExists(String userEmail) {
+		final String sql = " SELECT * FROM CLIENT_LOGIN_INFO CLI WHERE CLI.EMAIL = :email";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("email", userEmail);
+		Map<String, Object> result = jdbcTemplate.queryForObject(sql, params, new ColumnMapRowMapper());
+		return result.size() > 0 ? true : false;
+	}
+
 	/*@Override
 	public boolean isCompanyRegistered(String userEmail) {
 		final String sql = " SELECT COUNT(*) FROM  USER_ORGANIZATION_MAP UOM "

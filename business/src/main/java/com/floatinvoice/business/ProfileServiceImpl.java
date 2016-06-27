@@ -26,6 +26,11 @@ public class ProfileServiceImpl implements ProfileService {
 		return profileDao.findUserRegistrationStatus(userEmail);
 	}
 
+	@Override
+	public boolean verifyTempUserProfileExists(String userEmail) {
+		return profileDao.verifyTempUserProfileExists(userEmail);
+	}
+
 	
 
 }

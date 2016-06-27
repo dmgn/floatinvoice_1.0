@@ -3,9 +3,15 @@ package com.floatinvoice.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import com.floatinvoice.business.BankService;
 import com.floatinvoice.business.BankServiceImpl;
+import com.floatinvoice.business.EmailProperties;
+import com.floatinvoice.business.EmailService;
+import com.floatinvoice.business.EmailServiceImpl;
+import com.floatinvoice.business.EnquiryService;
+import com.floatinvoice.business.EnquiryServiceImpl;
 import com.floatinvoice.business.FileService;
 import com.floatinvoice.business.FileServiceImpl;
 import com.floatinvoice.business.FraudInvoiceService;
@@ -24,6 +30,13 @@ public class BusinessServiceConfig {
 	@Autowired
 	ReadServicesConfig readServicesConfig;
 	
+	@Autowired
+	Environment environment;
+	
+	@Bean
+	public EnquiryService enquiryService(){
+		return new EnquiryServiceImpl(readServicesConfig.enquiryDao(), emailService(), registrationService() );
+	}
 	
 	@Bean
 	public 	InvoiceService invoiceService(){
@@ -56,5 +69,15 @@ public class BusinessServiceConfig {
 	@Bean
 	public FileService fileService(){
 		return new FileServiceImpl(readServicesConfig.fileServiceDao());
+	}
+	
+	@Bean
+	public EmailService emailService(){
+		EmailProperties emailProps = new EmailProperties();
+		emailProps.setFromEmailAddress(environment.getRequiredProperty("email.from"));
+		emailProps.setPassword(environment.getRequiredProperty("smtp.password"));
+		emailProps.setSmtpServer(environment.getRequiredProperty("smtp.server"));
+		emailProps.setUser(environment.getRequiredProperty("smtp.user"));
+		return new EmailServiceImpl(emailProps);
 	}
 }
