@@ -13,7 +13,11 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	<parent>
+		<groupId>app.floatinvoice.web</groupId>
+		<artifactId>floatinvoice-build</artifactId>
+		<version>1.0</version>
+	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -60,9 +64,5 @@
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>		
 	</dependencies>
-	<parent>
-		<groupId>app.floatinvoice.web</groupId>
-		<artifactId>floatinvoice-build</artifactId>
-		<version>1.0</version>
-	</parent>
+	
 </project>

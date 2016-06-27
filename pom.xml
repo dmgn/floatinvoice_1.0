@@ -189,7 +189,7 @@
 		<module>config</module>
 		<module>rest</module>
 		<module>floatinvoice</module>
-		<module>fraudDetection</module>
+		<!--module>fraudDetection</module-->
 	</modules>
 	<build>
 		<plugins>
