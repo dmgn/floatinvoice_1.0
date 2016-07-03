@@ -3,6 +3,8 @@ package com.floatinvoice.business;
 import com.floatinvoice.business.dao.FileServiceDao;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.ByteMsg;
+import com.floatinvoice.messages.ListMsg;
+import com.floatinvoice.messages.SupportDocDtls;
 import com.floatinvoice.messages.UploadMessage;
 
 public class FileServiceImpl implements FileService {
@@ -38,6 +40,12 @@ public class FileServiceImpl implements FileService {
 		byte [] fileBytes = fileServiceDao.downloadSupportDocs(refId);
 		ByteMsg resultBytes = new ByteMsg(fileBytes);
 		return resultBytes;
+	}
+
+	@Override
+	public ListMsg<SupportDocDtls> summarySupportDocs(int companyId, int userId) {
+		
+		return new ListMsg<>(fileServiceDao.summarySupportDocs(companyId, userId));
 	}
 
 }

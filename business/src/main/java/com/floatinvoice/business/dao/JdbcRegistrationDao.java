@@ -96,8 +96,8 @@ public class JdbcRegistrationDao implements RegistrationDao {
 		paramMap.put("phoneNo", msg.getPhoneNo());		
 		paramMap.put("insertDt", new Date());		
 		paramMap.put("updateDt", new Date());		
-		paramMap.put("updateBy", UserContext.getUserName());		
-		paramMap.put("createdBy", UserContext.getUserName());		
+		paramMap.put("updateBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());	// This is HACK to allow admin user to create org obo SELLER org	
+		paramMap.put("createdBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());		// This is HACK to allow admin user to create org obo SELLER org
 		paramMap.put("orgType", msg.getOrgType());		
 		int row = jdbcTemplate.update(sql, paramMap);
 		if(row == 1){
@@ -108,7 +108,7 @@ public class JdbcRegistrationDao implements RegistrationDao {
 					+ " SYSDATE()) ";
 			
 			Map<String, Object> map = new HashMap<>();
-			map.put("email", UserContext.getUserName());
+			map.put("email", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());// This is HACK to allow admin user to create org obo SELLER org
 			map.put("acro", msg.getAcronym());
 			int nestedRow = jdbcTemplate.update(uoMapSql, map);
 			if( nestedRow == 1 && updateRegistrationStatus(UserContext.getUserName(), RegistrationStatusEnum.ORG.getCode())){

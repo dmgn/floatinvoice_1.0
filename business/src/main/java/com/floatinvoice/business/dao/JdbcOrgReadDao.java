@@ -92,4 +92,18 @@ public class JdbcOrgReadDao implements OrgReadDao {
 		Map<String, Object> result = jdbcTemplate.queryForMap(sql, paramMap);
 		return result;
 	}
+
+	@Override
+	public List<Integer> findAllNBFCS() {
+
+		List<Map<String, Object>> queryResultSet;
+		final String sql = "select company_id from ORGANIZATION_INFO oi where oi.org_type='NBFC'";
+		queryResultSet = jdbcTemplate.query(sql, new ColumnMapRowMapper());
+		List<Integer> result = new ArrayList<>();
+		for ( Map<String, Object> map : queryResultSet ){
+			result.add((Integer)map.get("company_id"));
+		}
+		return result;
+	
+	}
 }

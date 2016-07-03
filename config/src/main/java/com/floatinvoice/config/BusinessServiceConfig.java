@@ -35,7 +35,7 @@ public class BusinessServiceConfig {
 	
 	@Bean
 	public EnquiryService enquiryService(){
-		return new EnquiryServiceImpl(readServicesConfig.enquiryDao(), emailService(), registrationService() );
+		return new EnquiryServiceImpl(readServicesConfig.enquiryDao(), emailService(), registrationService(), readServicesConfig.orgReadDao() );
 	}
 	
 	@Bean

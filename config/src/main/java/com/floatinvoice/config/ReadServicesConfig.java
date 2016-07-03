@@ -31,6 +31,7 @@ public class ReadServicesConfig {
 	@Autowired
 	DataSourceConfig dataSourceConfig;
 
+		
 	@Bean
 	public ThirdPartyNotificationDao thirdPartyNotificationDao(){
 		return new JdbcThirdPartyNotificationDao(dataSourceConfig.siteDataSource());

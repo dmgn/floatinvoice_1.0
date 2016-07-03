@@ -34,6 +34,9 @@ public class RegistrationStep2CorpDtlsMsg {
 	@XmlElement(name="orgType")
 	private String orgType;
 
+	
+	private String user; // This is HACK to allow admin user to create org obo SELLER org
+	
 	public String getAcronym() {
 		return acronym;
 	}
@@ -96,6 +99,14 @@ public class RegistrationStep2CorpDtlsMsg {
 
 	public void setOrgType(String orgType) {
 		this.orgType = orgType;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 	
 	

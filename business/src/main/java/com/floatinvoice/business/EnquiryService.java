@@ -6,7 +6,7 @@ import com.floatinvoice.messages.ListMsg;
 
 public interface EnquiryService {
 
-	ListMsg<EnquiryFormMsg> viewEnquiry(int enqStatus);
+	ListMsg<EnquiryFormMsg> viewEnquiry(int enqStatus, String orgType);
 	
 	BaseMsg updateEnquiry(int enqStatus, String refId);
 
@@ -17,4 +17,8 @@ public interface EnquiryService {
 	BaseMsg notifyFloatInvoice(String user, String acronym, String refId);
 	
 	BaseMsg setupTempAcct(String refId);
+	
+	ListMsg<EnquiryFormMsg> viewEnquiryNotifications(String acronym);
+
+	void mapEnquiryToOrgSetup(String enquiryRefId, int enquiryId, int orgId, int userId);
 }

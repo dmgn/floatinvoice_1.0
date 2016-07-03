@@ -12,7 +12,6 @@
 //  $scope.file_url = '/floatinvoice/downloadSupportDocs?refId='+$scope.file.refId+'&fileName='+$scope.file.fileName+'&acro=COTIND&type=pdf';
 
             $scope.getUrl = function(file) {
-              console.log(file);
               return '/floatinvoice/downloadSupportDocs?refId='+file.refId+'&fileName='+file.fileName+'&acro='+acro+'&type=pdf';
               //  return "/floatinvoice/download?acro="+acro+"&refId="+file.refId+"&fileName="+file.fileName+"&type=xlsx";
             }

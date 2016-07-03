@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.floatinvoice.business.ProfileService;
@@ -40,7 +42,9 @@ public class LoginController {
         	model.setViewName("buyerView");
         }else if(userProfile.getOrgType().equalsIgnoreCase(OrgType.ADMIN.getText())){
         	model.setViewName("adminView");
-        } 
+        }else if ( userProfile.getOrgType().equalsIgnoreCase(OrgType.NBFC.getText())){
+        	model.setViewName("nbfcView");
+		} 
         return model;
     }
 	
@@ -103,6 +107,10 @@ public class LoginController {
         		modelAndView.addObject("windowLocation", "/floatinvoice/financierView");    			
     		}else if( uProfile.getOrgType().equalsIgnoreCase(OrgType.BUYER.getText())){
     			modelAndView.addObject("windowLocation", "/floatinvoice/buyerView");
+    		}else if ( uProfile.getOrgType().equalsIgnoreCase(OrgType.ADMIN.getText())){
+    			modelAndView.setViewName("adminView");
+    		}else if ( uProfile.getOrgType().equalsIgnoreCase(OrgType.NBFC.getText())){
+    			modelAndView.setViewName("nbfcView");
     		}
     	}else if(pageFwd == RegistrationStatusEnum.USER.getCode()){
     		modelAndView.addObject("acronym", uProfile.getOrgAcronym());
@@ -144,7 +152,7 @@ public class LoginController {
     }
     
     
-    @RequestMapping(value = "/docUpload", method = RequestMethod.GET)
+/*    @RequestMapping(value = "/docUpload", method = RequestMethod.GET)
     public ModelAndView docUpload(HttpSession session) {
         
     	String email = UserContext.getUserName();
@@ -152,9 +160,9 @@ public class LoginController {
     		session.setAttribute("remote-user", email);
     	}    	
     	ModelAndView model = new ModelAndView();
-        model.setViewName("registerDocsPage");
+        model.setViewName("registerDocsPage");								
         return model;
-    }
+    }*/
     
     protected UserProfile initializeSession(String email, HttpSession session){
     	if(session != null){
@@ -167,9 +175,12 @@ public class LoginController {
     }
     
    @RequestMapping("/logout")
-    public String logout(HttpSession session ) {
+    public String logout(HttpSession session, @RequestParam(value="tmpUser", required=false) String tmpUser ) {
 	   if(session != null)
 		   session.invalidate();
+	   if(tmpUser != null){
+		   return "redirect:/loginpage";
+	   }
        return "redirect:/login";
     }
 

@@ -2,22 +2,24 @@ package com.floatinvoice.business.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.sql.DataSource;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
-
 import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.messages.BaseMsg;
+import com.floatinvoice.messages.SupportDocDtls;
 import com.floatinvoice.messages.UploadMessage;
 
 public class JdbcFileServiceDao implements FileServiceDao {
@@ -99,4 +101,33 @@ public class JdbcFileServiceDao implements FileServiceDao {
 		return (byte[]) result.get("FILE_BYTES");
 	}
 
+	@Override
+	public List<SupportDocDtls> summarySupportDocs(int companyId, int userId) {
+		
+		final String sql = "SELECT DS.FILE_NAME, DS.REF_ID, DS.INSERT_DT, DS.CATEGORY, CLI.EMAIL FROM DOCS_STORE DS"
+				+ " JOIN CLIENT_LOGIN_INFO CLI"
+				+ " ON CLI.USER_ID = DS.USER_ID"
+				+ " WHERE DS.COMPANY_ID = :companyId AND DS.USER_ID = :userId";
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("userId", userId);
+		List<SupportDocDtls> list = jdbcTemplate.query(sql, paramMap, new SupportDocRowMapper());
+		return list;
+	}
+
+	private class SupportDocRowMapper implements RowMapper<SupportDocDtls>{
+
+		@Override
+		public SupportDocDtls mapRow(ResultSet rs, int arg1)
+				throws SQLException {
+			SupportDocDtls rec = new SupportDocDtls();
+			rec.setFileName(rs.getString("FILE_NAME"));
+			rec.setRefId(rs.getString("REF_ID"));
+			rec.setTimest(rs.getDate("INSERT_DT"));
+			rec.setUser(rs.getString("EMAIL"));
+			rec.setCateg(rs.getString("CATEGORY"));
+			return rec;
+		}
+		
+	}
 }

@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.floatinvoice.business.FileService;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.ByteMsg;
+import com.floatinvoice.messages.ListMsg;
+import com.floatinvoice.messages.SupportDocDtls;
 import com.floatinvoice.messages.UploadMessage;
 
 @Controller
@@ -24,6 +26,13 @@ public class FileController {
 
 	@Autowired
 	FileService fileService;
+	
+	@RequestMapping(value = { "/summary/supportDocs"}, method = RequestMethod.GET)
+	public ResponseEntity<ListMsg<SupportDocDtls>> viewSupportDocsSummary(@RequestParam(value="companyId", required=true) int companyId,
+    		@RequestParam(value="userId", required=true) int userId){
+		return new ResponseEntity<ListMsg<SupportDocDtls>>( fileService.summarySupportDocs(companyId, userId), HttpStatus.OK );
+	}
+	
 	
 	@RequestMapping(value = { "/downloadSupportDocs"}, method = RequestMethod.GET)
     public  void downloadSupportDocs(HttpServletResponse response, 

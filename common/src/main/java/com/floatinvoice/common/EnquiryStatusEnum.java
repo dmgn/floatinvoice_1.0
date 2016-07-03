@@ -1,5 +1,10 @@
 package com.floatinvoice.common;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
+
 public enum EnquiryStatusEnum {
 
 	NEW(0, "NEW"),
@@ -15,6 +20,19 @@ public enum EnquiryStatusEnum {
 		this.code = code;
 		this.text = text;
 	}
+	
+	private static final Map<Integer,EnquiryStatusEnum> lookup = new HashMap<>();
+
+	static {
+	     for(EnquiryStatusEnum s : EnumSet.allOf(EnquiryStatusEnum.class))
+	          lookup.put(s.getCode(), s);
+	}
+	
+	public static EnquiryStatusEnum get(int code) { 
+	      return lookup.get(code); 
+	}
+	
+	
 
 	public int getCode() {
 		return code;

@@ -27,9 +27,15 @@ public class EnquiryFormMsg extends BaseMsg{
 	
 	private int source;
 	
-	private int enqStatus;
+	private String enqStatus;
 	
 	private Date enqDate;
+	
+	private int enqId;
+	
+	private int userId;
+	
+	private int companyId;
 	
 	public String getContactName() {
 		return contactName;
@@ -104,11 +110,12 @@ public class EnquiryFormMsg extends BaseMsg{
 		this.source = source;
 	}
 
-	public int getEnqStatus() {
+
+	public String getEnqStatus() {
 		return enqStatus;
 	}
 
-	public void setEnqStatus(int enqStatus) {
+	public void setEnqStatus(String enqStatus) {
 		this.enqStatus = enqStatus;
 	}
 
@@ -119,6 +126,30 @@ public class EnquiryFormMsg extends BaseMsg{
 	public void setEnqDate(Date enqDate) {
 		this.enqDate = enqDate;
 	}
-	
-	
+
+	public int getEnqId() {
+		return enqId;
+	}
+
+	public void setEnqId(int enqId) {
+		this.enqId = enqId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+		
 }

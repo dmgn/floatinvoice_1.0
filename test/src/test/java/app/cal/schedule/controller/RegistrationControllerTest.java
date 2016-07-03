@@ -44,6 +44,19 @@ public class RegistrationControllerTest {
 	}
 	
 	@Test
+	public void testSummaryDocs() throws Exception{
+		
+
+		RequestBuilder req = get("/summary/supportDocs?companyId=150&userId=64").contentType(MediaType.APPLICATION_JSON)
+				.header("remote-user", "support@dsconcepts.com");
+		MvcResult res = mockMvc.perform(req).andDo(print()).andReturn();	
+		
+	}
+	
+	
+	
+	
+	@Test
 	public void testSignInRegistration() throws Exception{
 		
 		RegistrationStep1SignInDtlsMsg object = new RegistrationStep1SignInDtlsMsg();

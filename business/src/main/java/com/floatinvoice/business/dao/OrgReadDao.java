@@ -14,4 +14,7 @@ public interface OrgReadDao {
 	Map<String, Object> findOrgAndUserId( String userEmail );
 	
 	Integer findOrgIdByEmail(String userEmail);
+	
+	List<Integer> findAllNBFCS();
+	
 }

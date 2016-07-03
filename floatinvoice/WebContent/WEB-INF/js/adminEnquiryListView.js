@@ -1,7 +1,7 @@
  angular.module('adminfloatInvoiceListApp')
  .controller('EnquiryListViewCtrl', ['$scope', '$http', '$routeParams',
       function($scope, $http, $routeParams){
-        $http.get('/floatinvoice/enquiry/0')
+        $http.get('/floatinvoice/enquiry/0?orgType=ADMIN')
         .success(function(data){
           $scope.enquiries = data.list;
           $scope.sortField = 'enqDate';

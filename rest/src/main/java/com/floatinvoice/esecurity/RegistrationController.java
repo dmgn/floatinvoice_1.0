@@ -41,7 +41,7 @@ public class RegistrationController {
         return userProfile;
     }
  
-	@RequestMapping(value = { "/docs"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "/docs"}, method = RequestMethod.GET)// Normal registration to return the document upload page
     public ModelAndView docUpload() {
 		UserProfile userProfile = profileService.fetchUserProfile(UserContext.getUserName());
         ModelAndView model = new ModelAndView();
@@ -73,7 +73,7 @@ public class RegistrationController {
         return new ResponseEntity<>(registrationSvc.registerUserBankInfo(regStep3), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = { "/upload"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "/upload"}, method = RequestMethod.POST)						// Upload supporting docs on registration page
     public  ResponseEntity<BaseMsg> uploadFile(/*@RequestParam(value="acro", required=true) String acro,*/
     		@RequestParam(value="filename", required=false) String fileName,
     		@RequestParam(value="category", required=true) String category,
