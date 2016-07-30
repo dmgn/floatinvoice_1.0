@@ -1,5 +1,5 @@
 
-  <table ng-controller="UnpaidCtrl" class="table table-striped">
+  <table ng-controller="RejectedInvoicesCtrl" class="table table-striped">
     <tr>
       <th><a href="" ng-click="sortField = 'smeCtpy'">Buyer Name</td>
       <th><a href="" ng-click="sortField = 'invoicePONo'">Purchase Order #</td>
@@ -40,8 +40,14 @@
       <td>{{item.invoiceNo}}</td>
       <td>{{item.startDt}}</td>
       <td>{{item.endDt}}</td>
-      <td ng-if="item.status == '0'">
-      <button type="button" class="btn btn-primary" ng-click=collectNow(item.refId)>Collect Now</button>
+      <td colspan="2" >
+      <!-- <button type="button" class="btn btn-primary" ng-click=approveInvoice(item.refId)>Approve</button>
+      <button type="button" class="btn btn-primary" ng-click=rejectInvoice(item.refId)>Reject -->
+      <!-- <a href="" ng-click=approveInvoice(item.refId)><b class="label label-info">Approve</b></a> -->
+      <button type="button" class="btn label label-info" ng-click=displayInvoicePoolDtls(item.refId)>Edit</button>
+      <button type="button" class="btn label label-warning" ng-click=rejectInvoice(item.refId)>Delete</button>
+     <!--  <a href="" ng-click=rejectInvoice(item.refId)><b class="label label-warning">Reject</b></a>
+      -->
       </td>
     </tr>
   </table>

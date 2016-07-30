@@ -118,6 +118,30 @@ public class FileProcessor {
 					((LinkedList)invoiceDtMap.get("PURCHASE_ORDER_NO")).add(cell.getStringCellValue());
 				}
 				break;
+				
+			case Cell.CELL_TYPE_BLANK:
+				if(cell.getColumnIndex() == 0){
+					((LinkedList)invoiceDtMap.get("INVOICE_DATE")).add(cell.getDateCellValue());
+				}
+				if(cell.getColumnIndex() == 1){
+					((LinkedList) invoiceDtMap.get("DUE_DATE")).add(cell.getDateCellValue());
+				}
+				if(cell.getColumnIndex() == 2){
+					((LinkedList)invoiceDtMap.get("AMOUNT")).add((Double)cell.getNumericCellValue());
+				}
+				if(cell.getColumnIndex() == 3){
+					((LinkedList)invoiceDtMap.get("INVOICE_NO")).add(cell.getStringCellValue());
+				}
+				if(cell.getColumnIndex() == 4){
+					((LinkedList)invoiceDtMap.get("CUSTOMER_NAME")).add(cell.getStringCellValue());
+				}
+				if(cell.getColumnIndex() == 5){
+					((LinkedList)invoiceDtMap.get("DESCRIPTION")).add(cell.getStringCellValue());
+				}
+				if(cell.getColumnIndex() == 6){
+					((LinkedList)invoiceDtMap.get("PURCHASE_ORDER_NO")).add(cell.getStringCellValue());
+				}
+				break;
 		}
 	}
 

@@ -194,10 +194,10 @@ public class FraudDetection {
 	private static JavaSparkContext context;	
 
 	static{
-		/*conf = new SparkConf().setAppName(appName).setMaster(masterAddress);		
+		conf = new SparkConf().setAppName(appName).setMaster(masterAddress);		
 		conf.set("spark.driver.allowMultipleContexts", "true");
 		context = new JavaSparkContext(conf);
-*/	}
+	}
 	
 	public FraudDetection() {
 

@@ -44,8 +44,12 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public ListMsg<SupportDocDtls> summarySupportDocs(int companyId, int userId) {
-		
 		return new ListMsg<>(fileServiceDao.summarySupportDocs(companyId, userId));
+	}
+
+	@Override
+	public ListMsg<SupportDocDtls> summarySupportDocs(String acronym) {
+		return new ListMsg<>(fileServiceDao.summarySupportDocs(acronym));
 	}
 
 }

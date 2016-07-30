@@ -17,4 +17,6 @@ public interface FileService {
 	BaseMsg uploadLenderAgreement( UploadMessage msg)  throws Exception;
 
 	ListMsg<SupportDocDtls> summarySupportDocs(int companyId, int userId); 
+	
+	ListMsg<SupportDocDtls> summarySupportDocs(String acronym); 
 }

@@ -1,7 +1,23 @@
  angular.module('finfloatInvoiceListApp')
- .controller('FinProfileTabsCtrl', ['$scope', '$location', 
-      function ($scope, $location) {
+  .service('sharedProperties', function () {
+        var property = '';
 
+        return {
+            getProperty: function () {
+                return property;
+            },
+            setProperty: function(value) {
+                property = value;
+                console.log(property);
+            }
+        };
+    })
+
+ .controller('FinProfileTabsCtrl', ['$scope', '$location', 'sharedProperties',
+      function ($scope, $location, sharedProperties) {
+      $scope.compName = 'TESTACRO';
+      
+      sharedProperties.setProperty($scope.compName);
       $scope.tabs = [
           { link : '#/t2/profiles/summary', label : 'Summary' },
           { link : '#/t2/profiles/directors', label : 'Directors' },

@@ -132,6 +132,11 @@ public class InvoiceController {
         return new ResponseEntity<ListMsg<InvoiceDtlsMsg>>(invoiceService.viewBuyerRejectedInvoices(buyerOrgAcro), HttpStatus.OK);
     }
     
+    @RequestMapping(value = { "/rejected/smeView"}, method = RequestMethod.GET)
+    public  ResponseEntity<ListMsg<InvoiceDtlsMsg>> smeviewRejectedInvoices(@RequestParam(value="acro", required=true) String smeOrgAcro) {
+        return new ResponseEntity<ListMsg<InvoiceDtlsMsg>>(invoiceService.viewSMERejectedInvoices(smeOrgAcro), HttpStatus.OK);
+    }
+    
     @RequestMapping(value = { "/alleged"}, method = RequestMethod.GET)
     public  ResponseEntity<ListMsg<InvoiceDtlsMsg>> viewAllegedInvoices(@RequestParam(value="acro", required=true) String buyerOrgAcro) {
         return new ResponseEntity<ListMsg<InvoiceDtlsMsg>>(invoiceService.viewBuyerAllegedInvoices(buyerOrgAcro), HttpStatus.OK);

@@ -1,10 +1,10 @@
  
- <div class="container" >
+ <div class="container" ng-controller="FinProfileTabsCtrl">
 	<div style="margin-top: 1em;" class="row">
 		<div class="col-sm-3">
 			<md-input-container class="md-block" flex-sm>
 	               <label>Enter Borrower Name</label>
-	               <input type="text" name="compName" value="RELPUMP">		               
+	               <input type="text" name="usr.compName" ng-value="RELPUMP" ng-model="usr.compName">		               
 	         </md-input-container>
          </div>
          <div class="col-sm-4" style="margin-top: 1em;">
@@ -12,7 +12,7 @@
          </div>
 	</div>
 	<div class="row">
-        <ul class="nav nav-tabs nav-pills" ng-controller="FinProfileTabsCtrl">
+        <ul class="nav nav-tabs nav-pills" >
           <li ng-class="tabClass(tab, 'justified')" ng-repeat="tab in tabs" tab="tab"><a href="{{tab.link}}" ng-click="setSelectedTab(tab, 'justified')">{{tab.label}}</a></li>
         </ul>
         <div app-view-segment="2"></div> 

@@ -33,6 +33,11 @@ public class FileController {
 		return new ResponseEntity<ListMsg<SupportDocDtls>>( fileService.summarySupportDocs(companyId, userId), HttpStatus.OK );
 	}
 	
+	@RequestMapping(value = { "/fin/summary/supportDocs"}, method = RequestMethod.GET)
+	public ResponseEntity<ListMsg<SupportDocDtls>> finviewSupportDocsSummary(@RequestParam(value="acro", required=true) String acronym){
+		return new ResponseEntity<ListMsg<SupportDocDtls>>( fileService.summarySupportDocs(acronym), HttpStatus.OK );
+	}
+	
 	
 	@RequestMapping(value = { "/downloadSupportDocs"}, method = RequestMethod.GET)
     public  void downloadSupportDocs(HttpServletResponse response, 

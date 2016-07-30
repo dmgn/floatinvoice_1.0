@@ -44,7 +44,9 @@
   <script src="js/finInvoiceListView.js"></script>
   <script src="js/finApprovalQueueView.js"></script>
   <script src="js/finFundedListView.js" ></script>
-  
+  <script src="js/finSuppDocView.js" ></script>
+  <script src="js/finInvoicePoolDtlsModalCtrl.js"></script>
+
 <!-- <script src="img/cibil.jpg" ></script>
  --><link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" />
     <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.min.css" />

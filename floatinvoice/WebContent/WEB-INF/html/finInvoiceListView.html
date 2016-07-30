@@ -51,19 +51,14 @@
         </th>
     </tr>
     <tr ng-repeat="item in invoices | filter:search | orderBy:sortField">
-      <td><a ng-href="/floatinvoice/invoice/{{item.poolRefId}}">{{item.invoicePoolNo}}</a></td>
+      <td><a href="" ng-click="displayInvoicePoolDtls(item.poolRefId)">{{item.invoicePoolNo}}</a></td>
       <td>{{item.totPoolAmt}}</td>
       <td>{{item.sme}}</td>
       <td>{{item.smeCtpy}}</td>
       <td>
 
-<section layout-lg="row" flex="" ng-controller="RightCtrlListView" >
-<!--     <md-content flex="" layout-padding="">
- --><!--       <div layout="column" layout-fill="" layout-align="top center">   
- -->    <div>
-          <!-- <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" class="md-primary">
-            Get Paid
-          </md-button> -->
+      <section layout-lg="row" flex="" ng-controller="RightCtrlListView" >
+         <div>
           <button type="button" class="btn btn-primary" ng-click="toggleRight(item, 'right')" ng-hide="isOpenRight()">Bid Now</button>
         </div>
 <!--       </div>

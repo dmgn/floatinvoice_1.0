@@ -17,4 +17,6 @@ public interface FileServiceDao {
 	byte [] downloadLenderAgreement(String lenderAcronym, String refId);
 	
 	List<SupportDocDtls> summarySupportDocs(int companyId, int userId); 
+	
+	List<SupportDocDtls> summarySupportDocs(String acronym); 
 }

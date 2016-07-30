@@ -28,7 +28,8 @@
         when('/t2/profiles/summary','t2.profiles.summary').
         when('/t2/profiles/directors','t2.profiles.directors').
         when('/t2/profiles/creditHist','t2.profiles.creditHist').
-        when('/t2/profiles/metrics','t2.profiles.metrics').
+/*        when('/t2/profiles/suppDocs','t2.profiles.suppDocs').
+*/        when('/t2/profiles/metrics','t2.profiles.metrics').
         when('/t2/profiles/cashflow','t2.profiles.cashflow');
 
 
@@ -112,6 +113,12 @@
       .segment('creditHist', {
         templateUrl:'/floatinvoice/html/creditHistoryInfo.html'
     });
+/*    $routeSegmentProvider
+      .within('t2')
+      .within('profiles')
+      .segment('suppDocs', {
+        templateUrl:'/floatinvoice/html/FinDocView.html'
+    }); */     
     $routeSegmentProvider
       .within('t2')
       .within('profiles')

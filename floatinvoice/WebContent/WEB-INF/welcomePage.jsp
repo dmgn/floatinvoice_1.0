@@ -53,7 +53,10 @@
   <script src="js/supportingDoc.js"></script>
   <script src="js/appAdminView.js"></script>
   <script src="js/appNbfcView.js"></script>
-  <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" />
+  <script src="js/editInvoiceDtls.js"></script>
+  <script src="js/rejectedInvoices.js"></script>
+  <script src="js/invoicePoolDtlsModalCtrl.js"></script>
+   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.common-material.min.css" />
   <link rel="stylesheet" href="//kendo.cdn.telerik.com/2016.1.412/styles/kendo.material.min.css" />
   <script src="//kendo.cdn.telerik.com/2016.1.412/js/kendo.all.min.js"></script>
     

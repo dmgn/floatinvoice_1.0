@@ -113,11 +113,6 @@ public class EnquiryServiceImpl implements EnquiryService {
 		RegistrationStep2CorpDtlsMsg corpDtlsMsg = new RegistrationStep2CorpDtlsMsg();
 		corpDtlsMsg.setAcronym(Utility.acroRandomString(8));
 		Utility.set(corpDtlsMsg, "compName", " ");
-		Utility.set(corpDtlsMsg, "street", " ");
-		Utility.set(corpDtlsMsg, "city", " ");
-		Utility.set(corpDtlsMsg, "state", " ");
-		Utility.set(corpDtlsMsg, "zipCode", " ");
-		Utility.set(corpDtlsMsg, "phoneNo", " ");
 		Utility.set(corpDtlsMsg, "orgType", OrgType.SELLER.getText());
 		Utility.set(corpDtlsMsg, "user", enquiry.getEmail());
 		BaseMsg corpDtlsMsgResp = regService.registerOrgInfo(corpDtlsMsg);		

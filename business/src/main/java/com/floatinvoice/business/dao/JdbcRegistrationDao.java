@@ -83,17 +83,12 @@ public class JdbcRegistrationDao implements RegistrationDao {
 	@Override
 	public BaseMsg registerOrgInfo(RegistrationStep2CorpDtlsMsg msg) {
 		BaseMsg baseMsg = null;
-		final String sql = "INSERT INTO ORGANIZATION_INFO (ACRONYM, COMPANY_NAME, STREET, CITY, STATE, ZIP_CODE, COUNTRY, PHONE_NO, INSERT_DT, UPDATE_DT, UPDATE_BY, CREATED_BY, ORG_TYPE)"
-				+ " VALUES (:acro, :companyName, :street, :city, :state, :zipCode, 'INDIA', :phoneNo, :insertDt, :updateDt, :updateBy, :createdBy, :orgType)";
+		final String sql = "INSERT INTO ORGANIZATION_INFO (ACRONYM, COMPANY_NAME, INSERT_DT, UPDATE_DT, UPDATE_BY, CREATED_BY, ORG_TYPE)"
+				+ " VALUES (:acro, :companyName, :insertDt, :updateDt, :updateBy, :createdBy, :orgType)";
 		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("acro", msg.getAcronym());
 		paramMap.put("companyName", msg.getCompName());
-		paramMap.put("street", msg.getStreet());
-		paramMap.put("city", msg.getCity());
-		paramMap.put("state", msg.getState());
-		paramMap.put("zipCode", msg.getZipCode());
-		paramMap.put("phoneNo", msg.getPhoneNo());		
 		paramMap.put("insertDt", new Date());		
 		paramMap.put("updateDt", new Date());		
 		paramMap.put("updateBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());	// This is HACK to allow admin user to create org obo SELLER org	
@@ -114,7 +109,42 @@ public class JdbcRegistrationDao implements RegistrationDao {
 			if( nestedRow == 1 && updateRegistrationStatus(UserContext.getUserName(), RegistrationStatusEnum.ORG.getCode())){
 				baseMsg = new BaseMsg();
 			}
-		}		
+		}
+		if(msg.getStreet() != null){
+			final String orgAddrSql = 
+					"INSERT INTO ORGANIZATION_ADDRESS (STREET, CITY, STATE, ZIP_CODE, COUNTRY, INSERT_DT, UPDATE_DT, UPDATE_BY, CREATED_BY, COMPANY_ID)"
+					+ " VALUES (:street, :city, :state, :zipCode, 'INDIA', :insertDt, :updateDt, :updateBy, :createdBy, (SELECT COMPANY_ID FROM ORGANIZATION_INFO WHERE ACRONYM = :acro))";
+			Map<String, Object> paramMapOrgAddr = new HashMap<>();
+			paramMapOrgAddr.put("street", msg.getStreet());
+			paramMapOrgAddr.put("city", msg.getCity());
+			paramMapOrgAddr.put("state", msg.getState());
+			paramMapOrgAddr.put("zipCode", msg.getZipCode());
+			paramMapOrgAddr.put("insertDt", new Date());		
+			paramMapOrgAddr.put("updateDt", new Date());		
+			paramMapOrgAddr.put("updateBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());	// This is HACK to allow admin user to create org obo SELLER org	
+			paramMapOrgAddr.put("createdBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());		// This is HACK to allow admin user to create org obo SELLER org
+			paramMapOrgAddr.put("acro", msg.getAcronym());
+			jdbcTemplate.update(orgAddrSql, paramMapOrgAddr);
+		}
+		
+		
+		
+		if(msg.getPhoneNo() != null){
+			final String orgPhoneSql = 
+					"INSERT INTO ORGANIZATION_CONTACT_INFO (ADDRESS_ID, PHONE_NO, INSERT_DT, UPDATE_DT, UPDATE_BY, CREATED_BY)"
+					+ " VALUES ( (SELECT ADDRESS_ID FROM ORGANIZATION_ADDRESS WHERE COMPANY_ID IN (SELECT COMPANY_ID FROM ORGANIZATION_INFO WHERE ACRONYM = :acro)),"
+					+ " :phoneNo, :insertDt, :updateDt, :updateBy, :createdBy)";
+			Map<String, Object> paramMapPhone = new HashMap<>();
+			paramMapPhone.put("phoneNo", msg.getPhoneNo());
+			paramMapPhone.put("acro", msg.getAcronym());
+			paramMapPhone.put("insertDt", new Date());		
+			paramMapPhone.put("updateDt", new Date());		
+			paramMapPhone.put("updateBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());	// This is HACK to allow admin user to create org obo SELLER org	
+			paramMapPhone.put("createdBy", msg.getUser() == null ? UserContext.getUserName() : msg.getUser());		// This is HACK to allow admin user to create org obo SELLER org
+			jdbcTemplate.update(orgPhoneSql, paramMapPhone);
+		}
+		
+		
 		return baseMsg;		
 	}
 

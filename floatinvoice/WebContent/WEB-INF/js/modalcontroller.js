@@ -3,10 +3,7 @@ var app = angular.module('nbfcApp');
 app.controller('ModalController', [
   '$http','$scope', '$element', 'input', 'close', 'NbfcAcroNameService',
   function($http, $scope, $element, input, close, NbfcAcroNameService) {
-
-  $scope.enquiry = input;
-  console.log($scope.enquiry);
-
+ $scope.enquiry = input;
  $http.get('/floatinvoice/summary/supportDocs?companyId='+$scope.enquiry.companyId+'&userId='+$scope.enquiry.userId)
                  .success(function(data){
                     $scope.fileList = data.list;
@@ -17,10 +14,8 @@ app.controller('ModalController', [
   //  the button has the 'data-dismiss' attribute.
 
  $scope.getUrl = function(file) {
-  console.log('/floatinvoice/downloadSupportDocs?refId='+file.refId+'&fileName='+file.fileName+'&type=pdf');
             return '/floatinvoice/downloadSupportDocs?refId='+file.refId+'&fileName='+file.fileName+'&type=pdf';
-            //  return "/floatinvoice/download?acro="+acro+"&refId="+file.refId+"&fileName="+file.fileName+"&type=xlsx";
-          }
+ }
 
   $scope.close = function() {
  	  /*close({

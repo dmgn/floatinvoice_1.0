@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.sql.DataSource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +19,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
+
 import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.SupportDocDtls;
@@ -129,5 +132,17 @@ public class JdbcFileServiceDao implements FileServiceDao {
 			return rec;
 		}
 		
+	}
+
+	@Override
+	public List<SupportDocDtls> summarySupportDocs(String acronym) {
+		Map<String, Object> map = orgReadDao.findOrgId(acronym);
+		int companyId = (Integer) map.get("company_id");
+		final String sql = "SELECT DS.FILE_NAME, DS.REF_ID, DS.INSERT_DT, NULL AS EMAIL, DS.CATEGORY FROM DOCS_STORE DS"
+				+ " WHERE DS.COMPANY_ID = :companyId ";
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("companyId", companyId);
+		List<SupportDocDtls> list = jdbcTemplate.query(sql, paramMap, new SupportDocRowMapper());
+		return list;
 	}
 }

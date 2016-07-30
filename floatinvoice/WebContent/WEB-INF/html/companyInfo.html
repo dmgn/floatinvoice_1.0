@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="FinDocViewCtrl">
 
 	<div class="row" style="padding-top: 1em;">
 		<div class="col-sm-8">
@@ -17,4 +17,27 @@
 		</div>
 	</div>
 	
+
+
+  <div style="padding-top: 1em;">
+              <h4> Document list </h4>
+              <table class="table table-striped">
+                  <tr>
+                    <th><a href="" ng-click="sortField = 'fileName'">Name</td>
+                    <th><a href="" ng-click="sortField = 'timest'">Upload Time</th>
+                    <th><a href="" ng-click="sortField = 'categ'">Category</th>
+                  </tr>                
+                  <tr ng-repeat="file in fileList | filter:search | orderBy:sortField">
+                      <!-- <td><a href ng-click="openFile(file)">{{file.fileName}}</a></td> -->
+                      <td><a ng-href='{{getUrl(file)}}'>{{file.fileName}}</a></td>
+                      <td>{{file.timest}}</td>
+                      <td>{{file.categ}}</td>
+                  </tr>
+              </table>
+            <!-- <div align="center">
+              <dir-pagination-controls/>
+            </div> -->
+  </div>
+
+
 </div>

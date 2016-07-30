@@ -12,6 +12,7 @@ floatInvoiceListApp.config(function ($locationProvider, $routeProvider, $routeSe
     when('/s1/pending','s1.pending').
     when('/s1/funded','s1.funded').
     when('/s1/paid','s1.paid').
+    when('/s1/rejected','s1.rejected').
     when('/s1/delinquent','s1.delinquent').
     when('/s4/dashbd','s4.dashbd').
     when('/s4/compInfo','s4.compInfo').
@@ -84,6 +85,14 @@ floatInvoiceListApp.config(function ($locationProvider, $routeProvider, $routeSe
         templateUrl:'/floatinvoice/html/paid.html',
         controller:'PaidCtrl'
     });
+
+    $routeSegmentProvider
+      .within('s1')
+      .segment('rejected', {
+        templateUrl:'/floatinvoice/html/rejectedInvoices.html',
+        controller:'RejectedInvoicesCtrl'
+    });
+
     $routeSegmentProvider
       .within('s1')
       .segment('delinquent', {

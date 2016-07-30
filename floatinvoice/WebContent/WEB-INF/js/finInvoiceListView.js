@@ -1,5 +1,5 @@
 angular.module('finfloatInvoiceListApp')
-  .controller('InvoiceFinViewCtrl', ['$scope', '$http','acroNameService', function ($scope, $http,acroNameService){
+  .controller('InvoiceFinViewCtrl', ['$scope', '$window', '$http','acroNameService', 'ModalService', function ($scope, $window, $http, acroNameService, ModalService){
         var acro = acroNameService.getAcronym();  
         $http.get('/floatinvoice/invoice/view?acro='+acro).success(function(data){
         $scope.invoices = data.list;
@@ -25,7 +25,20 @@ angular.module('finfloatInvoiceListApp')
           $http.post('/floatinvoice/invoice/bid?acro='+acro, data).success($scope.refresh($scope.refId));
         };
 
-
+        $scope.displayInvoicePoolDtls = function( poolRefId ){
+            ModalService.showModal({
+              templateUrl: "html/invoicePoolDtls.html",
+              controller: "ModalFinInvoicePoolController",
+              inputs: {
+                input:poolRefId
+              }
+            }).then(function(modal) {
+             modal.element.modal();
+             modal.close.then(function(result) {
+                  //$scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
+            });
+            });
+        }
 
       });
      }])

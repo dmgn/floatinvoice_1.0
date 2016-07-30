@@ -41,7 +41,7 @@ public class WorkerThread implements Callable<Integer> {
 		try {
 			list = fetchWorkAssignments();
 			FraudDetection fDetection = new FraudDetection();
-			List<FraudTestResults> resultList = null;//fDetection.doFraudTests(list);
+			List<FraudTestResults> resultList = fDetection.doFraudTests(list);
 			persistAndMarkAsComplete(list, resultList);
 		} catch (Exception e) {
 			e.printStackTrace();

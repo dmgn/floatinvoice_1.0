@@ -46,4 +46,6 @@ public interface InvoiceService {
 	ListMsg<InvoiceDtlsMsg> viewBuyerAllegedInvoices( String buyerOrgAcro);
 	
 	ListMsg<FileDetails> viewAllInvoiceFiles (String acronym);
+	
+	ListMsg<InvoiceDtlsMsg> viewSMERejectedInvoices(String smeOrgAcro);
 }
