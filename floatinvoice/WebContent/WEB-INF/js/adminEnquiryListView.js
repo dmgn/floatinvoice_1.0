@@ -41,5 +41,21 @@
           });
         };
 
+        $scope.setupEnquiryAcct = function( enquiryRefId ){
+          ModalService.showModal({
+            templateUrl: "html/enquiryAcctSetup.html",
+            controller: "EnquiryModalAcctSetupController",
+            inputs: {
+              input:enquiryRefId
+            }
+          }).then(function(modal) {
+           modal.element.modal();
+           modal.close.then(function(result) {
+                //$scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
+          });
+          });
+        };
+
+
         });
     }]);

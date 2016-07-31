@@ -9,7 +9,45 @@
         <h4 class="modal-title">Enquiry Details</h4>
       </div>
       <div class="modal-body">
-      Hello World!! {{enquiry}}
+      <table>
+        <tr>
+          <td>Enquiry Id: </td>
+          <td>{{enquiry.enqId}}</td>          
+        </tr>
+        <tr>
+          <td>Contact Name: </td>
+          <td>{{enquiry.contactName}}</td>          
+        </tr>        
+        <tr>
+          <td>Email: </td>
+          <td>{{enquiry.email}}</td>          
+        </tr>
+        <tr>
+          <td>Phone No: </td>
+          <td>{{enquiry.phone}}</td>          
+        </tr>
+        <tr>
+          <td>Years in business: </td>
+          <td>{{enquiry.yrsInBusiness}}</td>          
+        </tr>
+        <tr>
+          <td>Industry: </td>
+          <td>{{enquiry.industryType}}</td>          
+        </tr>
+        <tr>
+          <td>ProductType: </td>
+          <td>{{enquiry.productType}}</td>          
+        </tr>
+        <tr>
+          <td>Designation: </td>
+          <td>{{enquiry.designation}}</td>          
+        </tr>    
+        <tr>
+          <td>Enquiry Date: </td>
+          <td>{{enquiry.enqDate}}</td>          
+        </tr>      
+      </table>
+
       </div>
       <div class="modal-footer">
         <!-- <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button> -->
