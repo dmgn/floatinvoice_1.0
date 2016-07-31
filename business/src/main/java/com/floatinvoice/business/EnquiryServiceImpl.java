@@ -11,6 +11,7 @@ import com.floatinvoice.common.Utility;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.EnquiryFormMsg;
 import com.floatinvoice.messages.ListMsg;
+import com.floatinvoice.messages.OrgDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep1SignInDtlsMsg;
 import com.floatinvoice.messages.RegistrationStep2CorpDtlsMsg;
 
@@ -103,27 +104,27 @@ public class EnquiryServiceImpl implements EnquiryService {
 	}
 
 	@Override
-	public BaseMsg setupTempAcct(String refId) {
-		EnquiryFormMsg enquiry = enqDao.findOneEnquiry(refId);
+	public BaseMsg setupTempAcct(OrgDtlsMsg orgDtls) {
+		EnquiryFormMsg enquiry = enqDao.findOneEnquiry(orgDtls.getRefId());
 		RegistrationStep1SignInDtlsMsg signInMsg = new RegistrationStep1SignInDtlsMsg();
 		signInMsg.setEmail(enquiry.getEmail());
 		signInMsg.setPasswd(Utility.passwdString(8));
 		signInMsg.setConfirmPasswd(Utility.passwdString(8));
 		BaseMsg signInMsgResp = regService.registerSignInInfo(signInMsg);		
 		RegistrationStep2CorpDtlsMsg corpDtlsMsg = new RegistrationStep2CorpDtlsMsg();
-		corpDtlsMsg.setAcronym(Utility.acroRandomString(8));
-		Utility.set(corpDtlsMsg, "compName", " ");
+		corpDtlsMsg.setAcronym(orgDtls.getAcro()/*Utility.acroRandomString(8)*/);
+		Utility.set(corpDtlsMsg, "compName", orgDtls.getOrgName());
 		Utility.set(corpDtlsMsg, "orgType", OrgType.SELLER.getText());
 		Utility.set(corpDtlsMsg, "user", enquiry.getEmail());
 		BaseMsg corpDtlsMsgResp = regService.registerOrgInfo(corpDtlsMsg);		
 		Map<String, Object> orgInfoObject = orgReadDao.findOrgAndUserId(enquiry.getEmail());
 		int userId = Integer.class.cast(orgInfoObject.get("USER_ID"));
 		int companyId = Integer.class.cast(orgInfoObject.get("COMPANY_ID"));
-		mapEnquiryToOrgSetup(refId, enquiry.getEnqId(), companyId, userId);
+		mapEnquiryToOrgSetup(orgDtls.getRefId(), enquiry.getEnqId(), companyId, userId);
 		BaseMsg acctSetupResp = null;
 		if(signInMsgResp.getSystemMessages().getInfo().size() > 0 &&
 				corpDtlsMsgResp.getSystemMessages().getInfo().size() > 0){
-			acctSetupResp = sendAcctSetupNotification(enquiry.getEmail(), refId, signInMsg.getPasswd());
+			acctSetupResp = sendAcctSetupNotification(enquiry.getEmail(), orgDtls.getRefId(), signInMsg.getPasswd());
 		}		
 		return acctSetupResp;
 	}

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import com.floatinvoice.business.EnquiryService;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.EnquiryFormMsg;
 import com.floatinvoice.messages.ListMsg;
+import com.floatinvoice.messages.OrgDtlsMsg;
 
 
 @Controller
@@ -41,9 +43,9 @@ public class EnquiryController {
         return model;
     }
 		
-	@RequestMapping(value = { "/notify/acctSetup/{refId}"}, method = RequestMethod.PUT)
-    public ResponseEntity<BaseMsg> sendAcctSetupNotification(@PathVariable("refId") String refId) throws Exception {
-        return new ResponseEntity<>(enquiryService.setupTempAcct(refId), HttpStatus.OK);
+	@RequestMapping(value = { "/notify/acctSetup"}, method = RequestMethod.POST)
+    public ResponseEntity<BaseMsg> sendAcctSetupNotification(@RequestBody OrgDtlsMsg orgDtls/*@PathVariable("refId") String refId*/) throws Exception {
+        return new ResponseEntity<>(enquiryService.setupTempAcct(orgDtls), HttpStatus.OK);
     }
 	
 	@RequestMapping(value = { "/notify/thirdParty/{refId}"}, method = RequestMethod.PUT)

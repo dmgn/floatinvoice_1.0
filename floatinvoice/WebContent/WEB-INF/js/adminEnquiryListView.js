@@ -6,7 +6,7 @@
           $scope.enquiries = data.list;
           $scope.sortField = 'enqDate';
           $scope.refresh = function(refId){
-            console.log(refId);
+            console.log("REFRESH " + refId);
           var index = -1;
           var invoiceList =  $scope.enquiries;
           for (var i=0; i<invoiceList.length; i++){
@@ -16,15 +16,16 @@
             }
           }
           $scope.enquiries.splice(index, 1);
+          console.log("refresh method end.");
         };
-          $scope.notify = function (refId){
+     /*     $scope.notify = function (refId){
           $scope.refId = refId;
           var data = JSON.stringify({
             refId : $scope.refId            
           });
           $http.put('/floatinvoice/notify/acctSetup/'+$scope.refId, data).success($scope.refresh($scope.refId));
           $scope.refId = {};
-        };
+        };*/
 
         $scope.displayEnquiryDtls = function( enquiry ){
           ModalService.showModal({
@@ -42,6 +43,7 @@
         };
 
         $scope.setupEnquiryAcct = function( enquiryRefId ){
+          $scope.refId = enquiryRefId;
           ModalService.showModal({
             templateUrl: "html/enquiryAcctSetup.html",
             controller: "EnquiryModalAcctSetupController",
@@ -51,8 +53,12 @@
           }).then(function(modal) {
            modal.element.modal();
            modal.close.then(function(result) {
-                //$scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
+               $scope.refresh($scope.refId);
+               $scope.refId = {};
+               modal.element.modal('hide');
           });
+
+          // modal.element.modal().hide();
           });
         };
 

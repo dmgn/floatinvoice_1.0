@@ -3,6 +3,7 @@ package com.floatinvoice.business;
 import com.floatinvoice.messages.BaseMsg;
 import com.floatinvoice.messages.EnquiryFormMsg;
 import com.floatinvoice.messages.ListMsg;
+import com.floatinvoice.messages.OrgDtlsMsg;
 
 public interface EnquiryService {
 
@@ -16,7 +17,7 @@ public interface EnquiryService {
 	
 	BaseMsg notifyFloatInvoice(String user, String acronym, String refId);
 	
-	BaseMsg setupTempAcct(String refId);
+	BaseMsg setupTempAcct(OrgDtlsMsg orgDtls);
 	
 	ListMsg<EnquiryFormMsg> viewEnquiryNotifications(String acronym);
 
