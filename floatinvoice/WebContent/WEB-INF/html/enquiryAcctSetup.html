@@ -1,0 +1,60 @@
+<div class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Float Invoice Setup</h4>
+      </div>
+      <div class="modal-body">      
+          <div class="col-sm-8">
+              <md-content layout-padding>
+              <div>
+              <span >
+                 <h5 ng-style={color:'green'}>{{respMsg}}</h5>
+                 <h5 ng-style={color:'red'}>{{errRespMsg}}</h5>
+               </span>
+                <form name="userForm" style="margin-top: 5em;" ng-submit="submitForm()" novalidate>
+          <!--         <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-xs>
+                      <label>Company (Disabled)</label>
+                      <input ng-model="user.company" disabled>
+                    </md-input-container>
+                    <md-datepicker ng-model="user.submissionDate" md-placeholder="Enter date">
+                    </md-datepicker>
+                  </div> -->
+                  <div layout-gt-xs="row"> 
+                        <md-input-container class="md-block" flex-gt-sm>
+                         <label>Name</label>
+                         <input type="text" name="compName" ng-model="user.compName">
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                         <label>Acronym</label>
+                         <input type="text" name="acronym"  ng-model="user.acronym" ng-minlength="3">
+                        </md-input-container>
+                  </div>
+                  <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                      <label>State</label>
+                      <md-select ng-model="user.state">
+                        <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+                          {{state.abbrev}}
+                        </md-option>
+                      </md-select>
+                    </md-input-container>
+                  </div>           
+                  <div style="float:right">
+                      <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid || checkRespMsg()">Save</button>  
+                      <button type="button" class="btn btn-primary" ng-disabled="checkRespMsg()? false : true" ng-Click="nextAction()">Next</button>  
+                  </div>
+               </form>
+              </div>
+            </md-content>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal">OK</button> -->
+        <button type="button" ng-click="cancel()" class="btn btn-primary">Close</button>
+      </div>
+    </div> 
+  </div>
+</div>
