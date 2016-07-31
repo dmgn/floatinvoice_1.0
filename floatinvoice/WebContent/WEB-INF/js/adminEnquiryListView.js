@@ -1,6 +1,6 @@
  angular.module('adminfloatInvoiceListApp')
- .controller('EnquiryListViewCtrl', ['$scope', '$http', '$routeParams',
-      function($scope, $http, $routeParams){
+ .controller('EnquiryListViewCtrl', ['$scope', '$http', '$routeParams', 'ModalService',
+      function($scope, $http, $routeParams, ModalService){
         $http.get('/floatinvoice/enquiry/0?orgType=ADMIN')
         .success(function(data){
           $scope.enquiries = data.list;
@@ -26,5 +26,20 @@
           $scope.refId = {};
         };
 
+        $scope.displayEnquiryDtls = function( enquiry ){
+          ModalService.showModal({
+            templateUrl: "html/enquiryDtls.html",
+            controller: "EnquiryModalViewController",
+            inputs: {
+              input:enquiry
+            }
+          }).then(function(modal) {
+           modal.element.modal();
+           modal.close.then(function(result) {
+                //$scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
           });
+          });
+        };
+
+        });
     }]);

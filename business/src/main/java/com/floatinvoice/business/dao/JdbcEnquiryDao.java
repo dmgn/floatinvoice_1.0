@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.floatinvoice.common.EnquiryStatusEnum;
+import com.floatinvoice.common.IndustryTypeEnum;
 import com.floatinvoice.common.OrgType;
+import com.floatinvoice.common.ProductTypeEnum;
 import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.EnquiryFormMsg;
@@ -55,10 +57,10 @@ public class JdbcEnquiryDao implements EnquiryDao {
 			row.setContactName(rs.getString("CONTACT_NAME"));
 			row.setDesignation(rs.getString("DESIGNATION"));
 			row.setEmail(rs.getString("EMAIL"));
-			row.setIndustryType(rs.getString("INDUSTRY"));
+			row.setIndustryType(IndustryTypeEnum.get(rs.getInt("INDUSTRY")).getText());
 			row.setLocation(rs.getString("LOCATION"));
 			row.setPhone(rs.getString("PHONE"));
-			row.setProductType(rs.getString("PRODUCT_TYPE"));
+			row.setProductType(ProductTypeEnum.get(rs.getInt("PRODUCT_TYPE")).getText());
 			row.setYrsInBusiness(rs.getString("YRS_IN_BUSINESS"));
 			row.setRefId(rs.getString("REF_ID"));
 			row.setSource(rs.getInt("SOURCE"));

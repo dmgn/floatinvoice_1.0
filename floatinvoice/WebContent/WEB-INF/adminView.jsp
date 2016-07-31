@@ -38,7 +38,7 @@
   <script src="js/adminPendingEnquiryListView.js"></script>
   <script src="js/adminStagedEnquiryListView.js"></script>
   <script src="js/adminReleasedEnquiryListView.js"></script>
-
+  <script src="js/enquiryViewModalCtrl.js"></script>
   <script>
     adminfloatInvoiceListApp.service('AdminAcroNameService', function(){
       this.getAcronym = function(){

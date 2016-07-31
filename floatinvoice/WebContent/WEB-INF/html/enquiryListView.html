@@ -1,6 +1,7 @@
 
   <table ng-controller="EnquiryListViewCtrl" class="table table-striped">
     <tr>
+      <th><a href="" ng-click="sortField = 'enqId'">Enquiry Id</td>
       <th><a href="" ng-click="sortField = 'contactName'">Contact Name</td>
       <th><a href="" ng-click="sortField = 'email'">Email</td>
       <th><a href="" ng-click="sortField = 'phone'"> Phone</td>
@@ -9,6 +10,9 @@
       <th/>
     </tr>
     <tr>
+        <th>
+            <input type="text" ng-model="search.enqId" placeholder="search for enquiry" class="input-sm form-control"/>
+        </th>
         <th>
             <input type="text" ng-model="search.contactName" placeholder="search for contactName" class="input-sm form-control"/>
         </th>
@@ -26,6 +30,7 @@
         </th>  
     </tr>
     <tr dir-paginate="item in enquiries | filter:search | orderBy:sortField| itemsPerPage: 10">
+      <td><a href="" ng-click="displayEnquiryDtls(item)">{{item.enqId}}</a></td>
       <td>{{item.contactName}}</td>
       <td>{{item.email}}</td>
       <td>{{item.phone}}</td>
