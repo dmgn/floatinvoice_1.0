@@ -141,4 +141,10 @@ public class EnquiryServiceImpl implements EnquiryService {
 		enqDao.mapEnquiryToOrgSetup(enquiryRefId, enquiryId, orgId, userId);
 	}
 
+	@Override
+	public EnquiryFormMsg viewStagedEnquiry(int enqStatus, String refId,
+			String companyId) {
+		return enqDao.viewStagedEnquiry(enqStatus, refId, companyId);
+	}
+
 }

@@ -22,4 +22,6 @@ public interface EnquiryService {
 	ListMsg<EnquiryFormMsg> viewEnquiryNotifications(String acronym);
 
 	void mapEnquiryToOrgSetup(String enquiryRefId, int enquiryId, int orgId, int userId);
+	
+	EnquiryFormMsg viewStagedEnquiry(int enqStatus, String refId, String companyId);
 }

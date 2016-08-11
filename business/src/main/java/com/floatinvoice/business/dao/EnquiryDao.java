@@ -17,4 +17,6 @@ public interface EnquiryDao {
 	List<EnquiryFormMsg> viewEnquiryNotifications(int orgId);
 	
 	int mapEnquiryToOrgSetup(String enquiryRefId, int enquiryId, int orgId, int userId);
+	
+	EnquiryFormMsg viewStagedEnquiry(int enqStatus, String refId, String companyId);
 }

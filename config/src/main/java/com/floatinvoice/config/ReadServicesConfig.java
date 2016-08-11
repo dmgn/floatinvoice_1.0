@@ -39,7 +39,7 @@ public class ReadServicesConfig {
 	
 	@Bean
 	public EnquiryDao enquiryDao(){
-		return new JdbcEnquiryDao(dataSourceConfig.siteDataSource());
+		return new JdbcEnquiryDao(dataSourceConfig.siteDataSource(), dataSourceConfig.dataSource());
 	}
 
 	@Bean

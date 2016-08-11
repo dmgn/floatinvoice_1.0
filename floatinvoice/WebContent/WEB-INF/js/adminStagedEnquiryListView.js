@@ -1,6 +1,6 @@
  angular.module('adminfloatInvoiceListApp')
- .controller('EnquiryStagedViewCtrl', ['$scope', '$http', '$routeParams',
-      function($scope, $http, $routeParams){
+ .controller('EnquiryStagedViewCtrl', ['$scope', '$http', '$routeParams', 'ModalService',
+      function($scope, $http, $routeParams, ModalService){
         $http.get('/floatinvoice/enquiry/3?orgType=ADMIN')
         .success(function(data){
           $scope.enquiries = data.list;
@@ -16,7 +16,7 @@
             }
           }
           $scope.enquiries.splice(index, 1);
-        };
+          };
           $scope.notify = function (refId){
           $scope.refId = refId;
           var data = JSON.stringify({
@@ -24,7 +24,25 @@
           });
           $http.put('/floatinvoice/notify/thirdParty/'+$scope.refId, data).success($scope.refresh($scope.refId));
           $scope.refId = {};
-        };
+          };
+
+
+          $scope.displayStagedEnquiryDtls = function( enquiry ){
+          ModalService.showModal({
+            templateUrl: "html/stagedEnquiryDtls.html",
+            controller: "StagedEnquiryModalViewController",
+            inputs: {
+              input:enquiry
+            }
+          }).then(function(modal) {
+           modal.element.modal();
+           modal.close.then(function(result) {
+                //$scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
+          });
+          });
+          };
+
+
 
           });
     }]);

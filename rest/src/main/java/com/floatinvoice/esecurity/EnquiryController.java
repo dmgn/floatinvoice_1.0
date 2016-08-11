@@ -35,6 +35,13 @@ public class EnquiryController {
         return new ResponseEntity<>(enquiryService.viewEnquiry(enqStatus, orgType), HttpStatus.OK);
     }
 	
+	@RequestMapping(value = { "/staged/{enqStatus}"}, method = RequestMethod.GET)
+    public ResponseEntity<EnquiryFormMsg> viewStagedEnquiries(@PathVariable("enqStatus") int enqStatus,
+    		@RequestParam(value="compId", required=false) String companyId,
+    		@RequestParam(value="refId", required=false) String refId) throws Exception {
+        return new ResponseEntity<>(enquiryService.viewStagedEnquiry(enqStatus, refId, companyId), HttpStatus.OK);
+    }
+	
 	@RequestMapping(value = { "/prospectsDocs"}, method = RequestMethod.GET)
     public ModelAndView fetchProspectsDocsPage(@RequestParam(value="refId", required=true) String refId) throws Exception {
 		ModelAndView model = new ModelAndView();

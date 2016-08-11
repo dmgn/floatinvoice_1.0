@@ -1,6 +1,8 @@
 package com.floatinvoice.messages;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EnquiryFormMsg extends BaseMsg{
 
@@ -36,6 +38,10 @@ public class EnquiryFormMsg extends BaseMsg{
 	private int userId;
 	
 	private int companyId;
+	
+	private String acro;
+	
+	private List<SupportDocDtls> supportDocs = new ArrayList<>();
 	
 	public String getContactName() {
 		return contactName;
@@ -149,6 +155,22 @@ public class EnquiryFormMsg extends BaseMsg{
 
 	public void setCompanyId(int companyId) {
 		this.companyId = companyId;
+	}
+
+	public List<SupportDocDtls> getSupportDocs() {
+		return supportDocs;
+	}
+
+	public void setSupportDocs(List<SupportDocDtls> supportDocs) {
+		this.supportDocs = supportDocs;
+	}
+
+	public String getAcro() {
+		return acro;
+	}
+
+	public void setAcro(String acro) {
+		this.acro = acro;
 	}
 
 		

@@ -40,6 +40,8 @@
   <script src="js/adminReleasedEnquiryListView.js"></script>
   <script src="js/enquiryViewModalCtrl.js"></script>
   <script src="js/enquiryAcctSetupModal.js"></script>
+  <script src="js/stagedEnquiryUpdate.js"></script>
+
 
   <script>
     adminfloatInvoiceListApp.service('AdminAcroNameService', function(){

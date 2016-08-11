@@ -34,6 +34,9 @@ public class SupportDocDtls extends BaseMsg {
 	@XmlElement(name="categ")	
 	String categ;
 	
+	@XmlElement(name="acro")	
+	String acro;
+	
 	public String getFileName() {
 		return fileName;
 	}
@@ -80,6 +83,14 @@ public class SupportDocDtls extends BaseMsg {
 
 	public void setCateg(String categ) {
 		this.categ = categ;
+	}
+
+	public String getAcro() {
+		return acro;
+	}
+
+	public void setAcro(String acro) {
+		this.acro = acro;
 	}
 	
 	

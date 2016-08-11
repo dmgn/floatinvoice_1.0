@@ -17,26 +17,66 @@ import com.floatinvoice.common.ProductTypeEnum;
 import com.floatinvoice.common.UUIDGenerator;
 import com.floatinvoice.common.UserContext;
 import com.floatinvoice.messages.EnquiryFormMsg;
+import com.floatinvoice.messages.SupportDocDtls;
 
 public class JdbcEnquiryDao implements EnquiryDao {
 
 	private NamedParameterJdbcTemplate jdbcTemplate;
-
+	private NamedParameterJdbcTemplate ficoreJdbcTemplate;
+	
 	public JdbcEnquiryDao(){
 		
 	}
 	
-	public JdbcEnquiryDao(DataSource dataSource){
+	public JdbcEnquiryDao(DataSource dataSource, DataSource ficoreDataSource){
 		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		this.ficoreJdbcTemplate = new NamedParameterJdbcTemplate(ficoreDataSource);
 	}
 
+
+	@Override
+	public EnquiryFormMsg viewStagedEnquiry(int enqStatus, String refId, String companyId) {
+		String sql = "SELECT EI.ENQUIRY_ID, EI.REF_ID, EI.CONTACT_NAME, EI.EMAIL, EI.PHONE, EI.YRS_IN_BUSINESS, "
+				+ " EI.INDUSTRY, EI.LOCATION, EI.PRODUCT_TYPE, EI.INSERT_DT, EI.DESIGNATION, EI.SOURCE, EI.ENQUIRY_STATUS, EOM.COMPANY_ID "
+				+ " FROM ENQUIRY_INFO EI "
+				+ " JOIN ENQUIRY_ORG_MAP EOM "
+				+ " ON EI.ENQUIRY_ID = EOM.ENQUIRY_ID "
+				+ " WHERE EI.REF_ID = :refId "
+				+ " AND EI.ENQUIRY_STATUS = :enqStatus";
+		MapSqlParameterSource paramMap = new MapSqlParameterSource();
+		paramMap.addValue("enqStatus", enqStatus);
+		paramMap.addValue("refId", refId);
+		EnquiryFormMsg result = jdbcTemplate.queryForObject(sql, paramMap, new EnquiryRowMapper());
+		String supportDocsSql = "SELECT DS.CATEGORY, DS.REF_ID, DS.FILE_NAME, DS.INSERT_DT, CLI.EMAIL, OI.ACRONYM FROM DOCS_STORE DS "
+				+ " JOIN CLIENT_LOGIN_INFO CLI "
+				+ " ON DS.USER_ID = CLI.USER_ID "
+				+ " JOIN ORGANIZATION_INFO OI "
+				+ " ON OI.COMPANY_ID = DS.COMPANY_ID"
+				+ " WHERE DS.COMPANY_ID = :companyId";
+		MapSqlParameterSource paramMapsupportDocs = new MapSqlParameterSource();
+		paramMapsupportDocs.addValue("companyId", companyId);
+		List<SupportDocDtls> supportDocs = ficoreJdbcTemplate.query(supportDocsSql, paramMapsupportDocs, new StagedEnquirySupportDocsDtlsRowMapper());
+		result.setSupportDocs(supportDocs);
+		return result;
+	}
+	
 	@Override
 	public List<EnquiryFormMsg> viewEnquiries(int enqStatus, String orgType) {		
 		String sql = null;
 		if (OrgType.ADMIN.getText().equalsIgnoreCase(orgType)){
-			sql = "SELECT * FROM ENQUIRY_INFO WHERE ENQUIRY_STATUS = :enqStatus";
+			sql = "SELECT EI.ENQUIRY_ID, EI.REF_ID, EI.CONTACT_NAME, EI.EMAIL, EI.PHONE, EI.YRS_IN_BUSINESS, "
+					+ " EI.INDUSTRY, EI.LOCATION, EI.PRODUCT_TYPE, EI.INSERT_DT, EI.DESIGNATION, EI.SOURCE, EI.ENQUIRY_STATUS, EOM.COMPANY_ID, NULL AS ACRO "
+					+ " FROM ENQUIRY_INFO EI "
+					+ " LEFT JOIN ENQUIRY_ORG_MAP EOM "
+					+ " ON EI.ENQUIRY_ID = EOM.ENQUIRY_ID "
+					+ " WHERE ENQUIRY_STATUS = :enqStatus";
 		}else{
-			sql = "SELECT * FROM ENQUIRY_INFO WHERE ENQUIRY_STATUS = :enqStatus AND EMAIL = :email";
+			sql = "SELECT EI.ENQUIRY_ID, EI.REF_ID, EI.CONTACT_NAME, EI.EMAIL, EI.PHONE, EI.YRS_IN_BUSINESS, "
+					+ " EI.INDUSTRY, EI.LOCATION, EI.PRODUCT_TYPE, EI.INSERT_DT, EI.DESIGNATION, EI.SOURCE, EI.ENQUIRY_STATUS, EOM.COMPANY_ID, NULL AS ACRO "
+					+ " FROM ENQUIRY_INFO EI "
+					+ " LEFT JOIN ENQUIRY_ORG_MAP EOM "
+					+ " ON EI.ENQUIRY_ID = EOM.ENQUIRY_ID "
+					+ " WHERE ENQUIRY_STATUS = :enqStatus AND EMAIL = :email";
 		}
 		MapSqlParameterSource paramMap = new MapSqlParameterSource();
 		paramMap.addValue("enqStatus", enqStatus);
@@ -46,7 +86,23 @@ public class JdbcEnquiryDao implements EnquiryDao {
 	}
 
 	
-	
+	private class StagedEnquirySupportDocsDtlsRowMapper implements RowMapper<SupportDocDtls>{
+
+		@Override
+		public SupportDocDtls mapRow(ResultSet rs, int arg1)
+				throws SQLException {
+			SupportDocDtls row = new SupportDocDtls();
+			row.setCateg(rs.getString("CATEGORY"));
+			row.setRefId(rs.getString("REF_ID"));
+			row.setFileName(rs.getString("FILE_NAME"));
+			row.setTimest(rs.getDate("INSERT_DT"));
+			row.setUser(rs.getString("EMAIL"));
+			row.setAcro(rs.getString("ACRONYM"));
+			return row;
+		}
+		
+		
+	}
 
 	private class EnquiryRowMapper implements RowMapper<EnquiryFormMsg>{
 
@@ -67,6 +123,8 @@ public class JdbcEnquiryDao implements EnquiryDao {
 			row.setEnqStatus(EnquiryStatusEnum.get(rs.getInt("ENQUIRY_STATUS")).getText());
 			row.setEnqDate(rs.getDate("INSERT_DT"));
 			row.setEnqId(rs.getInt("ENQUIRY_ID"));
+			row.setCompanyId(rs.getInt("COMPANY_ID"));
+			
 			return row;
 		}
 		
@@ -153,5 +211,6 @@ public class JdbcEnquiryDao implements EnquiryDao {
 		return jdbcTemplate.update(sql, params);		
 		
 	}
+
 
 }
