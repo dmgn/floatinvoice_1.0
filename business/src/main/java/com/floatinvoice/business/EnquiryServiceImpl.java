@@ -61,7 +61,7 @@ public class EnquiryServiceImpl implements EnquiryService {
 		BaseMsg response = new BaseMsg();
 		if(result > 0){
 			emailService.sendEmail("Float Invoice Account Setup", email, 
-					new StringBuffer(String.format("Please login to http://54.88.19.112:8080/floatinvoice/loginpage using the credentials in the email."
+					new StringBuffer(String.format("Please login to http://54.210.238.169:8080/floatinvoice/loginpage using the credentials in the email."
 							+ " Login Id is %s and Password is %s", email, password)));
 			response.addInfoMsg("Enquiry Updated Successfully", 0);
 		}else{
