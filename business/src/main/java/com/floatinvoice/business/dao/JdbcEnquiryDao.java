@@ -144,7 +144,11 @@ public class JdbcEnquiryDao implements EnquiryDao {
 
 	@Override
 	public EnquiryFormMsg findOneEnquiry(String refId) {
-		final String sql = "SELECT * FROM ENQUIRY_INFO WHERE REF_ID = :refId";
+		final String sql = "SELECT EI.ENQUIRY_ID, EI.REF_ID, "
+							+ " EI.CONTACT_NAME, EI.EMAIL, EI.PHONE, EI.YRS_IN_BUSINESS, "
+							+ " EI.INDUSTRY, EI.LOCATION, EI.PRODUCT_TYPE, EI.INSERT_DT, "
+							+ " EI.DESIGNATION, EI.SOURCE, EI.ENQUIRY_STATUS, NULL AS COMPANY_ID "
+							+ " FROM ENQUIRY_INFO EI WHERE REF_ID = :refId";
 		MapSqlParameterSource paramMap = new MapSqlParameterSource();
 		paramMap.addValue("refId", refId);
 		EnquiryFormMsg enquiry = jdbcTemplate.queryForObject(sql, paramMap, new EnquiryRowMapper());
