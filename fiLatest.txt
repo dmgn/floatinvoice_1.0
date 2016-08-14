@@ -1,0 +1,678 @@
+-- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
+--
+-- Host: localhost    Database: ficore
+-- ------------------------------------------------------
+-- Server version	5.6.22-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `client_login_info`
+--
+
+DROP TABLE IF EXISTS `client_login_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_login_info` (
+  `USER_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `EMAIL` varchar(45) NOT NULL,
+  `PASSWORD` varchar(45) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `REGISTRATION_STATUS` int(11) NOT NULL,
+  PRIMARY KEY (`USER_ID`),
+  UNIQUE KEY `EMAIL_UNIQUE` (`EMAIL`)
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `docs_store`
+--
+
+DROP TABLE IF EXISTS `docs_store`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `docs_store` (
+  `FILE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FILE_NAME` varchar(45) NOT NULL,
+  `FILE_BYTES` longblob NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `COMPANY_ID` int(11) DEFAULT NULL,
+  `USER_ID` int(11) NOT NULL,
+  `ref_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) NOT NULL,
+  `source_app` int(11) NOT NULL,
+  `category` varchar(45) NOT NULL,
+  PRIMARY KEY (`FILE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fi_account`
+--
+
+DROP TABLE IF EXISTS `fi_account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fi_account` (
+  `FI_ACCT_NO` int(11) NOT NULL AUTO_INCREMENT,
+  `FI_ACCT_REF_ID` varchar(45) NOT NULL,
+  `CREATE_DT` datetime NOT NULL,
+  `SME_ORG_ID` int(11) NOT NULL,
+  `ACCT_STATUS` int(11) NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  PRIMARY KEY (`FI_ACCT_NO`),
+  UNIQUE KEY `IDX_SME_ORG_ID` (`SME_ORG_ID`),
+  KEY `IDX_SME_ORG_ID_STATUS` (`SME_ORG_ID`,`ACCT_STATUS`),
+  CONSTRAINT `FK_SME_ORG_ID` FOREIGN KEY (`SME_ORG_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `file_store`
+--
+
+DROP TABLE IF EXISTS `file_store`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `file_store` (
+  `FILE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FILE_NAME` varchar(45) NOT NULL,
+  `FILE_BYTES` longblob NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
+  `USER_ID` int(11) NOT NULL,
+  `ref_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) NOT NULL,
+  `source_app` int(11) NOT NULL,
+  `ENQ_FLAG` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`FILE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fraud_detection_queue`
+--
+
+DROP TABLE IF EXISTS `fraud_detection_queue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fraud_detection_queue` (
+  `RANK` int(11) NOT NULL AUTO_INCREMENT,
+  `FRAUD_INVOICE_ID` int(11) NOT NULL,
+  `FRAUD_INVOICE_NO` varchar(45) NOT NULL,
+  `BUYER_ID` int(11) NOT NULL,
+  `SUPPLIER_ID` int(11) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `STATUS` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`RANK`),
+  KEY `IDX_STATUS` (`STATUS`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fraud_invoice_test_dtls`
+--
+
+DROP TABLE IF EXISTS `fraud_invoice_test_dtls`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fraud_invoice_test_dtls` (
+  `fraud_id` int(11) NOT NULL,
+  `fraud_test_id` int(11) NOT NULL,
+  KEY `fk_fraud_id_idx` (`fraud_id`),
+  KEY `fk_fraud_test_id_idx` (`fraud_test_id`),
+  CONSTRAINT `fk_fitd_fraud_test_id` FOREIGN KEY (`fraud_test_id`) REFERENCES `fraud_test_cases` (`FRAUD_TEST_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_fraud_id` FOREIGN KEY (`fraud_id`) REFERENCES `fraud_invoices` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fraud_invoices`
+--
+
+DROP TABLE IF EXISTS `fraud_invoices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fraud_invoices` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FRAUD_INVOICE_ID` int(11) NOT NULL,
+  `FRAUD_INVOICE_NO` varchar(45) NOT NULL,
+  `BUYER_ID` int(11) NOT NULL,
+  `SUPPLIER_ID` int(11) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `UPDATE_DT` datetime DEFAULT NULL,
+  `FRAUD_INVOICE_REF_ID` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `fraud_test_cases`
+--
+
+DROP TABLE IF EXISTS `fraud_test_cases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fraud_test_cases` (
+  `FRAUD_TEST_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FRAUD_TEST_NAME` varchar(45) NOT NULL,
+  PRIMARY KEY (`FRAUD_TEST_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `industrial_division_lp`
+--
+
+DROP TABLE IF EXISTS `industrial_division_lp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `industrial_division_lp` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `division_code` varchar(5) NOT NULL,
+  `division_name` varchar(200) NOT NULL,
+  `section_id` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_section_id_idx` (`section_id`),
+  CONSTRAINT `fk_section_id` FOREIGN KEY (`section_id`) REFERENCES `industrial_section_lp` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `industrial_group_lp`
+--
+
+DROP TABLE IF EXISTS `industrial_group_lp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `industrial_group_lp` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `group_code` varchar(5) NOT NULL,
+  `group_name` varchar(200) NOT NULL,
+  `division_id` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_division_id_idx` (`division_id`),
+  CONSTRAINT `fk_division_id` FOREIGN KEY (`division_id`) REFERENCES `industrial_division_lp` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `industrial_section_lp`
+--
+
+DROP TABLE IF EXISTS `industrial_section_lp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `industrial_section_lp` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `section_code` varchar(5) NOT NULL,
+  `section_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_financier_candidates`
+--
+
+DROP TABLE IF EXISTS `invoice_financier_candidates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_financier_candidates` (
+  `candidate_id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_pool_id` int(11) NOT NULL,
+  `financier_id` int(11) NOT NULL,
+  `interest_rate` double NOT NULL,
+  `loan_period` int(11) NOT NULL,
+  `ref_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) NOT NULL,
+  `update_by` varchar(45) NOT NULL,
+  `source_app` int(11) NOT NULL,
+  `insert_dt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `hair_cut` varchar(10) NOT NULL,
+  `loan_amt_offered` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`candidate_id`),
+  KEY `FK_INVOICE_ID_idx` (`invoice_pool_id`),
+  KEY `IDX_IP_ID_FIN_ID` (`invoice_pool_id`,`financier_id`),
+  CONSTRAINT `FK_INVOICE_F_CANDIDATES_ID` FOREIGN KEY (`invoice_pool_id`) REFERENCES `invoice_pool` (`POOL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_financier_map`
+--
+
+DROP TABLE IF EXISTS `invoice_financier_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_financier_map` (
+  `invoice_pool_id` int(11) NOT NULL,
+  `status` varchar(10) NOT NULL,
+  `insert_dt` datetime NOT NULL,
+  `ref_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) DEFAULT NULL,
+  `user_id` varchar(45) NOT NULL,
+  `source_app` int(11) DEFAULT NULL,
+  `candidate_id` int(11) NOT NULL,
+  `map_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`map_id`),
+  KEY `FK_INVOICE_ID_IFM_idx` (`invoice_pool_id`),
+  KEY `FK_CANDIDATE_ID_idx` (`candidate_id`),
+  CONSTRAINT `FK_CANDIDATE_ID` FOREIGN KEY (`candidate_id`) REFERENCES `invoice_financier_candidates` (`candidate_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_INVOICE_ID_IFM` FOREIGN KEY (`invoice_pool_id`) REFERENCES `invoice_pool` (`POOL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_info`
+--
+
+DROP TABLE IF EXISTS `invoice_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_info` (
+  `invoice_start_dt` date NOT NULL,
+  `invoice_end_dt` date NOT NULL,
+  `amount` decimal(8,2) NOT NULL,
+  `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_no` varchar(45) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `file_id` int(11) NOT NULL,
+  `buyer_name` varchar(45) NOT NULL,
+  `buyer_id` int(11) DEFAULT NULL,
+  `buyer_approval` char(1) NOT NULL DEFAULT 'N',
+  `insert_dt` datetime DEFAULT NULL,
+  `description` varchar(45) NOT NULL,
+  `ref_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `source_app` int(11) NOT NULL,
+  `invoice_status` int(11) NOT NULL DEFAULT '0',
+  `purchase_order_no` varchar(45) NOT NULL,
+  `is_eligible` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`invoice_id`),
+  KEY `fk_file_id_idx` (`file_id`),
+  KEY `idx_po_no` (`purchase_order_no`),
+  CONSTRAINT `fk_file_id` FOREIGN KEY (`file_id`) REFERENCES `file_store` (`FILE_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER ficore.TRIG_FRAUD_TEST AFTER INSERT ON INVOICE_INFO FOR EACH ROW
+begin
+ 
+ INSERT INTO FRAUD_DETECTION_QUEUE (FRAUD_INVOICE_ID, FRAUD_INVOICE_NO, BUYER_ID, SUPPLIER_ID, INSERT_DT)
+ VALUES (NEW.INVOICE_ID, 
+   NEW.INVOICE_NO,
+   NEW.BUYER_ID,
+   NEW.COMPANY_ID,
+   NEW.INSERT_DT);
+ END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `invoice_notification_list`
+--
+
+DROP TABLE IF EXISTS `invoice_notification_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_notification_list` (
+  `notification_id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_pool_id` int(11) NOT NULL,
+  `financier_id` int(11) NOT NULL,
+  `insert_dt` datetime NOT NULL,
+  `expiration_dt` datetime DEFAULT NULL,
+  PRIMARY KEY (`notification_id`),
+  KEY `FK_INVOICE_ID_idx` (`invoice_pool_id`),
+  KEY `IDX_FINANCIER_EXP_DT` (`financier_id`,`expiration_dt`),
+  KEY `IDX_FINANCIER_BID_OPEN` (`financier_id`),
+  CONSTRAINT `FK_INVOICE_ID` FOREIGN KEY (`invoice_pool_id`) REFERENCES `invoice_pool` (`POOL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_pool`
+--
+
+DROP TABLE IF EXISTS `invoice_pool`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_pool` (
+  `POOL_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `SUPPLIER_ID` int(11) NOT NULL,
+  `BUYER_ID` int(11) NOT NULL,
+  `POOL_STATUS` int(11) DEFAULT '0',
+  `POOL_REF_ID` varchar(45) NOT NULL,
+  `INVOICE_POOL_AMT` double NOT NULL,
+  `IS_BID_OPEN` char(1) NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`POOL_ID`),
+  UNIQUE KEY `POOL_ID_UNIQUE` (`POOL_ID`),
+  UNIQUE KEY `IDX_REF_ID` (`POOL_REF_ID`),
+  KEY `IDX_INVOICE_POOL` (`SUPPLIER_ID`,`BUYER_ID`,`POOL_STATUS`),
+  KEY `IDX_POOL_STATUS` (`POOL_STATUS`),
+  KEY `IDX_IS_BID_OPEN` (`IS_BID_OPEN`),
+  CONSTRAINT `FK_SUPPLIER_ORG_ID` FOREIGN KEY (`SUPPLIER_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_pool_candidate`
+--
+
+DROP TABLE IF EXISTS `invoice_pool_candidate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_pool_candidate` (
+  `IP_CANDIDATE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `INVOICE_ID` int(11) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `REF_ID` varchar(45) NOT NULL,
+  `CANDIDATE_STATUS` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`IP_CANDIDATE_ID`),
+  KEY `FK_IPC_INVOICE_ID_idx` (`INVOICE_ID`),
+  CONSTRAINT `FK_IPC_INVOICE_ID` FOREIGN KEY (`INVOICE_ID`) REFERENCES `invoice_info` (`invoice_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_pool_members`
+--
+
+DROP TABLE IF EXISTS `invoice_pool_members`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_pool_members` (
+  `INVOICE_POOL_ID` int(11) NOT NULL,
+  `INVOICE_ID` int(11) NOT NULL,
+  UNIQUE KEY `FK_UNIQUE_IPM` (`INVOICE_POOL_ID`,`INVOICE_ID`),
+  KEY `FK_INVOICE_ID_idx` (`INVOICE_ID`),
+  CONSTRAINT `FK_INVOICE_ID_POOL` FOREIGN KEY (`INVOICE_ID`) REFERENCES `invoice_info` (`invoice_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_INVOICE_POOL_ID` FOREIGN KEY (`INVOICE_POOL_ID`) REFERENCES `invoice_pool` (`POOL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `invoice_pool_queue`
+--
+
+DROP TABLE IF EXISTS `invoice_pool_queue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `invoice_pool_queue` (
+  `POOL_ID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ENQ_FLAG` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `FK_IPQ_POOL_ID_idx` (`POOL_ID`),
+  CONSTRAINT `FK_IPQ_POOL_ID` FOREIGN KEY (`POOL_ID`) REFERENCES `invoice_pool` (`POOL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `lender_agreement_doc`
+--
+
+DROP TABLE IF EXISTS `lender_agreement_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lender_agreement_doc` (
+  `ID` int(11) NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
+  `AGREEMENT` blob,
+  `REF_ID` varchar(45) DEFAULT NULL,
+  `REQUEST_ID` varchar(45) DEFAULT NULL,
+  `SOURCE_APP` int(11) DEFAULT NULL,
+  `FILE_NAME` varchar(45) NOT NULL,
+  `INSERT_DT` datetime DEFAULT NULL,
+  `UPDATE_DT` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `FK_LAD_ORG_ID` FOREIGN KEY (`ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `loan_info`
+--
+
+DROP TABLE IF EXISTS `loan_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loan_info` (
+  `LOAN_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `LOAN_REF_ID` varchar(45) NOT NULL,
+  `LOAN_STATUS` int(11) NOT NULL,
+  `LOAN_AMT` decimal(10,2) NOT NULL,
+  `LOAN_DISPATCH_DT` datetime NOT NULL,
+  `LOAN_CLOSE_DT` datetime NOT NULL,
+  `SME_ORG_ID` int(11) NOT NULL,
+  `FINANCIER_ORG_ID` int(11) NOT NULL,
+  `CREATE_DT` datetime NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  `INVOICE_POOL_ID` int(11) NOT NULL,
+  PRIMARY KEY (`LOAN_ID`),
+  KEY `FK_LOAN_INFO_SME_ORG_ID_idx` (`SME_ORG_ID`),
+  KEY `FK_LOAN_INFO_FINANCIER_ID_idx` (`FINANCIER_ORG_ID`),
+  KEY `IDX_STATUS_SME_ORG_ID` (`SME_ORG_ID`,`LOAN_STATUS`),
+  KEY `IDX_LOAN_REF_ID` (`LOAN_REF_ID`),
+  KEY `FK_LOAN_INFO_INVOICE_POOL_ID_idx` (`INVOICE_POOL_ID`),
+  CONSTRAINT `FK_LOAN_INFO_FINANCIER_ID` FOREIGN KEY (`FINANCIER_ORG_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_LOAN_INFO_SME_ORG_ID` FOREIGN KEY (`SME_ORG_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `loan_installment`
+--
+
+DROP TABLE IF EXISTS `loan_installment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loan_installment` (
+  `installment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `loan_id` int(11) NOT NULL,
+  `payment_due_dt` datetime NOT NULL,
+  `paid_dt` datetime NOT NULL,
+  `fees` decimal(10,2) DEFAULT NULL,
+  `paid_amount` decimal(10,2) NOT NULL,
+  `paid_by` varchar(45) NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`installment_id`),
+  KEY `FK_LOAN_ID_idx` (`loan_id`),
+  CONSTRAINT `FK_LOAN_ID` FOREIGN KEY (`loan_id`) REFERENCES `loan_info` (`LOAN_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `organization_address`
+--
+
+DROP TABLE IF EXISTS `organization_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `organization_address` (
+  `ADDRESS_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `STREET` varchar(45) NOT NULL,
+  `CITY` varchar(45) NOT NULL,
+  `STATE` varchar(45) NOT NULL,
+  `ZIP_CODE` varchar(45) NOT NULL,
+  `COUNTRY` varchar(45) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `UPDATE_DT` datetime NOT NULL,
+  `UPDATE_BY` varchar(45) NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ADDRESS_ID`),
+  KEY `FK_COMPANY_ID_idx` (`COMPANY_ID`),
+  CONSTRAINT `FK_COMPANY_ID` FOREIGN KEY (`COMPANY_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `organization_contact_info`
+--
+
+DROP TABLE IF EXISTS `organization_contact_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `organization_contact_info` (
+  `CONTACT_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ADDRESS_ID` int(11) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `UPDATE_DT` datetime NOT NULL,
+  `UPDATE_BY` varchar(45) NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  `PHONE_NO` varchar(15) NOT NULL,
+  PRIMARY KEY (`CONTACT_ID`),
+  KEY `FK_ADDRESS_ID_idx` (`ADDRESS_ID`),
+  CONSTRAINT `FK_ADDRESS_ID` FOREIGN KEY (`ADDRESS_ID`) REFERENCES `organization_address` (`ADDRESS_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `organization_info`
+--
+
+DROP TABLE IF EXISTS `organization_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `organization_info` (
+  `COMPANY_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ACRONYM` varchar(10) NOT NULL,
+  `COMPANY_NAME` varchar(100) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  `UPDATE_DT` datetime NOT NULL,
+  `UPDATE_BY` varchar(45) NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  `ORG_TYPE` varchar(45) NOT NULL,
+  PRIMARY KEY (`COMPANY_ID`),
+  UNIQUE KEY `ACRONYM_UNIQUE` (`ACRONYM`)
+) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `registration_status`
+--
+
+DROP TABLE IF EXISTS `registration_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `registration_status` (
+  `ID` int(11) NOT NULL,
+  `TEXT` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sme_bank_info`
+--
+
+DROP TABLE IF EXISTS `sme_bank_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sme_bank_info` (
+  `BANK_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `BANK_ACCT_NO` varchar(45) NOT NULL,
+  `BANK_NAME` varchar(45) NOT NULL,
+  `IFSC_CODE` varchar(45) NOT NULL,
+  `BRANCH_NAME` varchar(45) DEFAULT NULL,
+  `SME_ORG_ID` int(11) NOT NULL,
+  `ACCT_TYPE` int(11) NOT NULL,
+  `BANK_REF_ID` varchar(45) NOT NULL,
+  `CREATED_BY` varchar(45) NOT NULL,
+  `CREATE_DT` datetime NOT NULL,
+  PRIMARY KEY (`BANK_ID`),
+  UNIQUE KEY `IDX_BANK_ACCT_NO` (`BANK_ACCT_NO`,`BANK_NAME`,`IFSC_CODE`),
+  KEY `FK_BANK_INFO_SME_ORG_ID_idx` (`SME_ORG_ID`),
+  CONSTRAINT `FK_BANK_INFO_SME_ORG_ID` FOREIGN KEY (`SME_ORG_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sme_buyer_approval_map`
+--
+
+DROP TABLE IF EXISTS `sme_buyer_approval_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sme_buyer_approval_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sme_org_id` int(11) NOT NULL,
+  `buyer_org_id` int(11) NOT NULL,
+  `update_dt` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sme_user_info`
+--
+
+DROP TABLE IF EXISTS `sme_user_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sme_user_info` (
+  `USER_ID` int(11) NOT NULL,
+  `BANK_ACCOUNT_NO` varchar(15) NOT NULL,
+  `BANK_IFSC_CODE` varchar(15) NOT NULL,
+  `BANK_NAME` varchar(45) NOT NULL,
+  `BRANCH_NAME` varchar(45) DEFAULT NULL,
+  `DIRECTOR_FNAME` varchar(45) NOT NULL,
+  `DIRECTOR_LNAME` varchar(45) NOT NULL,
+  `PAN_CARD_NO` varchar(45) NOT NULL,
+  `AADHAR_CARD_ID` varchar(45) NOT NULL,
+  KEY `FK_UID_idx` (`USER_ID`),
+  CONSTRAINT `FK_UID` FOREIGN KEY (`USER_ID`) REFERENCES `client_login_info` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_organization_map`
+--
+
+DROP TABLE IF EXISTS `user_organization_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_organization_map` (
+  `USER_ORG_MAP_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `USER_ID` int(11) NOT NULL,
+  `COMPANY_ID` int(11) NOT NULL,
+  `INSERT_DT` datetime NOT NULL,
+  PRIMARY KEY (`USER_ORG_MAP_ID`),
+  KEY `FK_MAP_COMPANY_ID_idx` (`COMPANY_ID`),
+  KEY `FK_MAP_USER_ID_idx` (`USER_ID`),
+  CONSTRAINT `FK_MAP_COMPANY_ID` FOREIGN KEY (`COMPANY_ID`) REFERENCES `organization_info` (`COMPANY_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_MAP_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `client_login_info` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-08-14 14:19:41
